@@ -1,11 +1,10 @@
-
 # GitHub Project Forker
 
-Fork a GitHub project from CLI (bash)
+Fork a GitHub project from CLI
 
-It basically
+It basically:
 
-1. Forks the project into your GitHub account
+1. Forks a project into your GitHub account
 2. Clones it locally
 3. Sets up remote such that `origin` points to your fork, and `src` points to original source.
 
@@ -13,25 +12,41 @@ For authentication it uses [GitHub REST API][1]. It asks for your credentials fo
 
   [1]: https://developer.github.com/v3/repos/forks/#create-a-fork
 
-Usage:
-
-
+##Installation
 
 ```sh
-$ gh-fork https://github.com/author/library
+npm install -g ghfork
+```
 
-  First time, please login
-  Enter your GitHub username:me
-  Enter host password for user 'me':***
-  79f24c87xxxxxxxxxxxxxxxa4d203d75c
-  Token saved successfully for future use in ~/.gh-token
-  Authentication successfull! Welcome, me <my@email.com>
-  Forking library...
-  Cloning into 'library'...
-  Receiving objects: 100% ..., done.
-  origin  git@github.com:me/library.git (fetch)
-  origin  git@github.com:me/library.git (push)
-  src     git@github.com:author/library.git (fetch)
-  src     git@github.com:author/library.git (push)
+##Usage:
+
+```sh
+ghfork <GitHub Library URL>
+
+Options:
+  -u, --url         GitHub Library URL to fork/clone [prompted if not supplied]
+  -t, --token       Specify token manually (otherwise auto-retrived)
+  -f, --token-file  File to save token for future (default ~/.gh-token)
+  -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
+  -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
+  -n, --token-note  Note to use when getting token (default "gh-token")
+  -r, --remote      Remote name to use for original library (default "src")
+  -d, --domain      Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
+```
+
+##Example
+
+```sh
+$ ghfork https://github.com/some-author/some-library
+
+  Getting token from file ~/.gh-token...
+  Authenticating...
+  Welcome, your-username <your@email.com>
+  Forking some-author/some-library...
+  Cloning git@github.com:your-username/some-library.git...
+  Adding remote "src" => "git@github.com:some-author/some-library.git"
+  Setting user.name = "your-username"
+  Setting user.email = "your@email.com"
+  done
 ```
 

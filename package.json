@@ -1,0 +1,30 @@
+{
+  "name": "ghfork",
+  "version": "0.0.0",
+  "description": "Fork a GitHub project from CLI",
+  "main": "index.js",
+  "bin": "cli.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:laggingreflex/gh-forker.git"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "test": "mocha --compilers js:babel-register"
+  },
+  "dependencies": {
+    "fs-promise": "^0.5.0",
+    "git-promise": "^0.3.0",
+    "github": "^3.1.0",
+    "prompt-promise": "^1.0.3",
+    "yargs": "^5.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.14.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.14.0",
+    "mocha": "^3.0.2",
+    "shelljs": "^0.7.4"
+  }
+}
