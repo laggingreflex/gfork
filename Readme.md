@@ -1,14 +1,40 @@
 # GitHub Project Forker
 
-Fork a GitHub project from CLI
+When I fork a GitHub project, I usually do the following:
 
-It basically:
+1. Fork
 
-1. Forks a project into your GitHub account
-2. Clones it locally
-3. Sets up remote such that `origin` points to your fork, and `src` points to original source.
+  Original: https://github.com/original-author/some-library
 
-For authentication it uses [GitHub REST API][1]. It asks for your credentials for the first time, uses it to receive an authentication token and stores it for future use in `~/.gh-token`.
+  Forked: https://github.com/my-username/some-library
+
+2. Clone
+
+  ```sh
+  git clone git@github.com:my-username/some-library.git
+  ```
+  I usually clone my own fork, so that "origin" (remote name) points to it and I can push changes to it which automatically show up as prompts to make new pull requests on the original author's library.
+
+3. Set up remote
+
+  Then I set up the original remote as "src"
+
+  ```sh
+  git remote add src git@github.com:original-author/some-library.git
+  ```
+
+  So that I can still pull any future updates or fetch other pull requests from the original source:
+
+  ```sh
+  git pull src master
+  git fetch src pull/42/head:pull_request_#42
+  ```
+
+**ghfork** does exactly all this!
+
+It uses the [GitHub REST API][1] to fork on your behalf\*, and uses local `git` to do the rest.
+
+<sup>\* It asks for your credentials for the first time, uses it to receive an authentication token and stores it for future use in `~/.gh-token`.</sup>
 
   [1]: https://developer.github.com/v3/repos/forks/#create-a-fork
 
@@ -21,15 +47,15 @@ npm install -g ghfork
 ##Usage:
 
 ```sh
-ghfork <GitHub Library URL>
+ghfork <GitHub project URL>
 
 Options:
-  -u, --url         GitHub Library URL to fork/clone [prompted if not supplied]
+  -u, --url         GitHub project URL to fork/clone [prompted if not provided]
   -t, --token       Specify token manually (otherwise auto-retrived)
   -f, --token-file  File to save token for future (default ~/.gh-token)
   -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
   -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
-  -n, --token-note  Note to use when getting token (default "gh-token")
+  -n, --token-note  Note to use when getting token (default "gh-token"). If you're gettig error "already exists", try changing this.
   -r, --remote      Remote name to use for original library (default "src")
   -d, --domain      Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
 ```
@@ -39,14 +65,14 @@ Options:
 ```sh
 $ ghfork https://github.com/some-author/some-library
 
-  Getting token from file ~/.gh-token...
-  Authenticating...
-  Welcome, your-username <your@email.com>
-  Forking some-author/some-library...
-  Cloning git@github.com:your-username/some-library.git...
-  Adding remote "src" => "git@github.com:some-author/some-library.git"
-  Setting user.name = "your-username"
-  Setting user.email = "your@email.com"
-  done
+Getting token from file ~/.gh-token...
+Authenticating...
+Welcome, your-username <your@email.com>
+Forking some-author/some-library...
+Cloning git@github.com:your-username/some-library.git...
+Adding remote "src" => "git@github.com:some-author/some-library.git"
+Setting user.name = "your-username"
+Setting user.email = "your@email.com"
+done
 ```
 
