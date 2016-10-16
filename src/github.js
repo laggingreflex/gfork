@@ -5,7 +5,7 @@ const github = new GitHubApi({});
 export default github;
 
 export function decodeGitHubUrl({ url }) {
-  const regexp = /github.com[\/\:](.*?)\/(.*?)($|.git)/;
+  const regexp = /github.com[\/\:](.*?)\/(.*?)(\/|$|\.git)/;
   const result = regexp.exec(url);
   if (!result || result.length < 4) {
     throw new Error(`Couldn't extract owner/repo from url "${url}"`)

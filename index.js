@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 
 try {
   module.exports = require('./lib');
