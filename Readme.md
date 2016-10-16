@@ -43,6 +43,7 @@ When I fork a GitHub project, I usually do the following:
 **ghfork** does exactly all this.
 
 It uses the [GitHub API][1] to fork\*, and uses local `git` to do the rest.
+
 <sup>\*It asks for your credentials for the first time, uses it to receive an authentication token and stores it for future use in ~/.ghfork.</sup>
 
   [1]: https://developer.github.com/v3/repos/forks/#create-a-fork
@@ -122,3 +123,17 @@ Options:
 ```
 
 Settings are saved in config file (`~/.ghfork`) in JSON format.
+
+## Issues
+
+If you get an error like this while logging in:
+
+```json
+{"message":"Validation Failed","errors":[{"resource":"OauthAccess","code":"already_exists","field":"description"}],"documentation_url":"https://developer.github.com/v3/oauth_authorizations/#create-a-new-authorization"}
+```
+It probably means you had logged in before and token has been lost. Try changing the `token-note`
+
+```sh
+$ ghfork -n "Some random new token note"
+```
+
