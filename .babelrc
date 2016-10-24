@@ -1,4 +1,6 @@
 {
-  presets: ['stage-0'],
-  plugins: ['transform-es2015-modules-commonjs'],
+  "presets": [
+    "es2015-node6/object-rest",
+    "stage-0"
+  ]
 }

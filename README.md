@@ -1,53 +1,50 @@
-# GitHub Project Forker
+[![npm](https://img.shields.io/npm/v/ghfork.svg)](https://www.npmjs.com/package/ghfork)
 
-I got sick of doing these 4 things over and over again so I made this CLI tool.
+# ghfork
 
-When I fork a GitHub project, I usually do the following:
+Fork, clone, and init a GitHub project all at once from command-line.
 
-1. Fork it on GitHub
+If you find yourself doing the following everytime you clone a GitHub project:
 
-    Original: `https://github.com/original-author/some-library`
+1. Fork a project on GitHub
 
-    Forked: `https://github.com/my-username/some-library`
+    Original: `https://github.com/some/library`
 
-2. Clone **my** fork locally
+    Forked: `https://github.com/your/library`
+
+2. Clone **your** fork locally
 
     ```sh
-    git clone git@github.com:my-username/some-library.git
+    git clone git@github.com:your/library.git
     ```
-    I usually clone my own fork, so that "origin" (remote name) points to it and I can push changes to it which automatically show up as prompts to make new pull requests on the original author's library.
+    "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
 
-3. Set up original remote
-
-    Then I set up the original remote as "src"
+3. Set up original remote as "src"
 
     ```sh
     git remote add src git@github.com:original-author/some-library.git
     ```
 
-    So that I can still pull any future updates or fetch other pull requests from the original source:
-
-  ```sh
-  git pull src master
-  git fetch src pull/42/head:pull_request_#42
-  ```
-
-4. Initialize with some commands
-
-    Lastly I initialize the proejct with some usual commands
+    Pull any future updates
 
     ```sh
-    code.exe . && npm link
+    git pull src
     ```
 
-**ghfork** does exactly all this.
+    or [checkout pull requests][1] from the original source:
 
-It uses the [GitHub API][1] to fork\*, and uses local `git` to do the rest.
 
-<sup>\*It asks for your credentials for the first time, uses it to receive an authentication token and stores it for future use in ~/.ghfork.</sup>
+    ```sh
+    git fetch src pull/42/head:pull_request_#42
+    ```
 
-  [1]: https://developer.github.com/v3/repos/forks/#create-a-fork
+4. Initialize the project after cloning
 
+    ```sh
+    touch $repo.sublime-project && npm i
+    ```
+
+Then **ghfork** is for you! It does all this in one go from command line.
 
 ## Installation
 
@@ -57,34 +54,36 @@ npm install -g ghfork
 
 ## Usage:
 
-#### First time use
+#### First time setup
 
-Set up your GitHub login and other config.
+Initially let it authenticate you to GitHub and get an authentication token for future use:
 
-```sh
+```
 $ ghfork
 Welcome! Please login to your GitHub account
-Enter your username: hunter
-Enter your password: *******
+? Enter your username: hunter
+? Enter your password: *******
 Authenticating...
-Welcome, AzureDiamond <your@email.com>
+Welcome, AzureDiamond
 Config saved succesfully to file "~/.ghfork"
-Clone a GitHub URL? [y] n
-Edit the config? [y] y
-Set a different token note? ["Token for ghfork"]:
-Set a different name for original remote? [src]:
-Set a different domain name? [github.com]:
-Set a command to run after cloning?: echo done
+
+? Clone a GitHub URL? (Y/n) No
+? Edit the config? (Y/n) Yes
+
+? Token note: Token for ghfork
+? Name for original remote: src
+? Domain name: github.com
+? Command to run after cloning: echo done
 Config saved succesfully to file "~/.ghfork"
 ```
 
-You can run `ghfork` without a URL any time to set up this config.
+You can run `ghfork` (without arguments) any time to set up this config.
 
 #### Subsequent use
 
-Just tell it the URL to fork & clone
+Just pass it the URL to fork/clone
 
-```sh
+```
 $ ghfork https://github.com/original-owner/test-repo
 Authenticating...
 Welcome, you <your@email.com>
@@ -107,7 +106,7 @@ done
 
 ## Options
 
-```sh
+```
 ghfork <GitHub project URL>
 
 Options:
@@ -122,7 +121,27 @@ Options:
   -c, --command     Command to execute after cloning. Inside repo dir with $repo variable name.
 ```
 
-Settings are saved in config file (`~/.ghfork`) in JSON format.
+## Features
+
+### Authentication
+
+Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.ghfork`
+
+### Fork & clone
+
+It uses the [GitHub API][2] to fork, and uses local `git` to do the rest.
+
+### Command
+
+After succesfully cloning it can execute specified commands from inside the repo dir. It also makes the repo name available as an environment variable: `$repo` which you can use in your command:
+
+```
+touch $repo.sublime-project && npm i
+```
+
+### Config
+
+Settings are saved in config file (`~/.ghfork`) in JSON format on every command invocation.
 
 ## Issues
 
@@ -137,3 +156,5 @@ It probably means you had logged in before and token has been lost. Try changing
 $ ghfork -n "Some random new token note"
 ```
 
+  [1]: https://help.github.com/articles/checking-out-pull-requests-locally/
+  [2]: https://developer.github.com/v3/repos/forks/#create-a-fork

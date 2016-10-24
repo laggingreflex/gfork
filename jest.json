@@ -1,0 +1,8 @@
+{
+  "testRegex": "(/tests/.*|/src/.*\\.(test|spec))\\.js",
+  "verbose": true,
+  "!collectCoverage": true,
+  "collectCoverageFrom": ["src/**/*.js"],
+  "coverageDirectory": "tests-coverage",
+  "coverageReporters": ["lcov", "text"]
+}

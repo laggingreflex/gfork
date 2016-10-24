@@ -1,2 +1,5 @@
 
-lib
+.vscode
+tests-coverage
+dist
+node_modules
