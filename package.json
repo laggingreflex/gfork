@@ -5,7 +5,7 @@
   "main": "dist",
   "bin": "cli.js",
   "scripts": {
-    "build": "rimraf dist && babel src -d dist",
+    "build": "rimraf dist && babel src -d dist --source-maps",
     "lint": "eslint src tests",
     "test": "jest --config jest.json",
     "tdd": "npm run test -- --watch"
@@ -20,6 +20,7 @@
     "github-url-parse": "^0.1.0",
     "inquirer": "^1.2.2",
     "prompt-sync": "^4.1.4",
+    "source-map-support": "^0.4.5",
     "yargs": "^5.0.0"
   },
   "devDependencies": {

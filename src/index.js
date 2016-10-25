@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import config from './config';
 import {
   getTokenFromGitHub,

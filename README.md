@@ -1,6 +1,5 @@
-[![npm](https://img.shields.io/npm/v/ghfork.svg)](https://www.npmjs.com/package/ghfork)
 
-# ghfork
+# ghfork [![npm](https://img.shields.io/npm/v/ghfork.svg)](https://www.npmjs.com/package/ghfork)
 
 Fork, clone, and init a GitHub project all at once from command-line.
 
@@ -17,6 +16,7 @@ If you find yourself doing the following everytime you clone a GitHub project:
     ```sh
     git clone git@github.com:your/library.git
     ```
+
     "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
 
 3. Set up original remote as "src"
@@ -26,14 +26,11 @@ If you find yourself doing the following everytime you clone a GitHub project:
     ```
 
     Pull any future updates
-
     ```sh
     git pull src
     ```
 
     or [checkout pull requests][1] from the original source:
-
-
     ```sh
     git fetch src pull/42/head:pull_request_#42
     ```

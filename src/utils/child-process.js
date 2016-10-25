@@ -5,7 +5,7 @@ export function splitCommandStr( commandStr ) {
   return [ command, args ];
 }
 
-export function exec( command, args, { cwd, env, shell = true } ) {
+export function exec( command, args, { cwd, env, shell = true } = {} ) {
   return spawn( command, args.filter( Boolean ), {
     stdio: 'inherit',
     cwd,
