@@ -1,6 +1,6 @@
 {
   "name": "ghfork",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Fork, clone, and init a GitHub project all at once from command-line.",
   "main": "dist",
   "bin": "cli.js",
