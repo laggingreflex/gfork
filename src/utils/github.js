@@ -48,10 +48,13 @@ export function getPackageNameFromNpmUrl(url) {
 }
 
 export function geGithubUrlFromNpmPackageName(packageName) {
-  return new Promise((k, e) => request({ uri: 'https://registry.npmjs.org/' + packageName, json: true }, function(err, response, body) {
+  return new Promise((k, e) => request({
+    uri: 'https://registry.npmjs.org/' + packageName,
+    json: true
+  }, function(err, response, body) {
     if (err) e(err);
     else if (body && body.repository && body.repository.url) k(body.repository.url);
-    else e(new Error(`${packageName} doesn't exist`));
+    else e(new Error(`Couldn't find {package: ${packageName}} on npmjs registry`));
   }));
 }
 

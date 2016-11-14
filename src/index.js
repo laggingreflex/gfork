@@ -70,10 +70,6 @@ async function main() {
     }
   }
 
-  if (!config.urls) {
-    config.urls = [config.url];
-  }
-
   return Promise.all(config.urls.map((url => {
     return main2(url).catch(error => {
       // console.error(error);

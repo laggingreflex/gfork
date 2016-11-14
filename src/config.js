@@ -51,23 +51,31 @@ class Config {
     config.password = args.password || args.p || config.password;
 
     config.root = args.root || args.cwd || process.cwd();
-    config.here = args.here || args._.includes('.');
+    if (args.nm) {
+      config.root = 'node_modules';
+    }
+
+    config.here = args.here || args._[args._.length - 1] === '.';
     if (args._.includes('.')) {
-      args._.splice(args._.indexOf('.'), 1);
+      args._ = args._.filter(a => a !== '.');
     }
 
     config.rm = args.rm;
 
     config.url = args.url || args.library || args.u || args.l || args._;
     if (config.url instanceof Array) {
-      if (config.url.length > 1) {
-        config.urls = config.url;
-      }
-      config.url = config.url[0];
+      config.urls = config.url;
+      config.url = config.urls[0];
+    } else {
+      config.urls = [config.url];
     }
 
-    if (config.urls && config.here) {
+    if (config.urls.length > 1 && config.here) {
       throw new Error(`Can't clone multiple repos in the same dir.`);
+    }
+    if (config.urls.length < 1 && config.here) {
+      config.url = path.basename(config.root);
+      config.urls = [config.url];
     }
 
     config.token = args.token || args.t || config.token;
@@ -108,4 +116,4 @@ class Config {
   }
 }
 
-export default new Config(yargs.argv);
+export default new Config(argv);

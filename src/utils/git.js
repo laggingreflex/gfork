@@ -1,12 +1,14 @@
-import { remove } from 'fs-promise';
+import { emptydir, readdir } from 'fs-promise';
 import { join } from 'path';
 import { exec } from './child-process';
 
 export async function clone({ repo, url, cwd, here, rm }) {
+  const dir = join(cwd, repo);
   if (rm) {
-    const rmDir = join(cwd, repo);
     console.log(`Removing dir '${repo}'...`);
-    await remove(rmDir);
+    await emptydir(dir);
+  } else if ((await readdir(dir)).length) {
+    throw new Error(`Non-empty directory. Please choose an empty dir or use --rm switch to remove all files.\n${dir}`);
   }
   await exec('git', ['clone', url, repo], { cwd });
 }
