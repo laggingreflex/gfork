@@ -30,12 +30,13 @@ async function login() {
   config.username = user;
   config.email = email;
   console.log( `Welcome, ${user} <${email}>` );
-  await config.saveToFile( !config.configFileNotExistsFlag );
+  if (config.configFileNotExistsFlag) {
+    await config.saveToFile();
+  }
 }
 
 async function editConfig() {
   await config.edit( config );
-  await config.saveToFile();
 }
 
 async function main() {
