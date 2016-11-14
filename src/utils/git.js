@@ -7,9 +7,11 @@ export async function clone({ repo, url, cwd, here, rm }) {
   if (rm) {
     console.log(`Removing dir '${repo}'...`);
     await emptydir(dir);
-  } else if ((await readdir(dir)).length) {
-    throw new Error(`Non-empty directory. Please choose an empty dir or use --rm switch to remove all files.\n${dir}`);
-  }
+  } else try {
+    if ((await readdir(dir)).length) {
+      throw new Error(`Non-empty directory. Please choose an empty dir or use --rm switch to remove all files.\n${dir}`);
+    }
+  } catch (err) {}
   await exec('git', ['clone', url, repo], { cwd });
 }
 
