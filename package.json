@@ -1,7 +1,7 @@
 {
-  "name": "ghfork",
-  "version": "0.1.2",
-  "description": "Fork, clone, and init a GitHub project all at once from command-line.",
+  "name": "gfork",
+  "version": "0.2.1",
+  "description": "Fork, clone, init github/npm projects from command-line.",
   "main": "dist",
   "bin": "cli.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "test": "jest --config jest.json",
     "tdd": "npm run test -- --watch"
   },
-  "repository": "laggingreflex/ghfork",
+  "repository": "laggingreflex/gfork",
   "author": "laggingreflex@gmail.com",
   "license": "ISC",
   "dependencies": {
@@ -18,7 +18,6 @@
     "client-request": "^1.1.0",
     "fs-promise": "^0.5.0",
     "github": "^3.1.0",
-    "github-url-parse": "^0.1.0",
     "inquirer": "^1.2.2",
     "prompt-sync": "^4.1.4",
     "source-map-support": "^0.4.5",
@@ -31,7 +30,6 @@
     "chokidar": "^1.6.1",
     "eslint": "^3.8.1",
     "eslint-config-canonical": "^1.8.8",
-    "jest": "^16.0.2",
     "rimraf": "^2.5.4",
     "shelljs": "^0.7.4"
   }

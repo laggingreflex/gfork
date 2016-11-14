@@ -10,8 +10,8 @@ describe('git.clone', async() => {
 });
 
 describe.skip('git.clone', async() => {
-  const repo = 'ghfork';
-  const url = 'https://github.com/laggingreflex/ghfork';
+  const repo = 'gfork';
+  const url = 'https://github.com/laggingreflex/gfork';
   it('should clone', async() => {
     await git.clone({ url })
     const files = await fs.readdir(repo);

@@ -3,7 +3,7 @@ import github from './github';
 export async function getTokenFromGitHub({
   username,
   password,
-  tokenNote = 'Token for ghfork',
+  tokenNote = 'Token for gfork',
 }) {
   github.authenticate({
     type: 'basic',

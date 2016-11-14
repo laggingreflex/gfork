@@ -1,52 +1,132 @@
 
-# ghfork [![npm](https://img.shields.io/npm/v/ghfork.svg)](https://www.npmjs.com/package/ghfork)
+# gfork
+[![npm](https://img.shields.io/npm/v/gfork.svg)](https://www.npmjs.com/package/gfork)
 
-Fork, clone, and init a GitHub project all at once from command-line.
+Fork, clone, init github/npm projects from command-line.
 
-If you find yourself doing the following everytime you clone a GitHub project:
+How do you clone a GitHub project? Hit the fork button, copy the git URL, run `git clone ...` in the terminal, probably do some initialization like `npm install`? Or maybe you have GitHub client..
 
-1. Fork a project on GitHub
+But how do you go about cloning an npm module? Find its GitHub URL and do the above? And what if you have to do it for multiple projects at a time?
 
-    Original: `https://github.com/some/library`
+**gfork** makes all this a lot easier.
+With **gfork** you could simply do something like this:
 
-    Forked: `https://github.com/your/library`
+```sh
+$ gfork express
+...
+Forking expressjs/express...
+Cloning into 'express'...
+```
 
-2. Clone **your** fork locally
+Or...
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/kentcdodds">@kentcdodds</a> Now wouldn&#39;t it be cool, if you could go into a repo in your node_modules and run `npm fork` and it would fork it on github.</p>&mdash; Merrick Christensen (@iammerrick) <a href="https://twitter.com/iammerrick/status/717194650629476353">April 5, 2016</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+Super handy if you're debugging inside your dependencies and you might find a bug or want to submit a patch to the source project's github repo.
+
+You can do this with gfork!
+
+```sh
+$ cd node_modules/express
+$ rm --rf ./*
+$ gfork .
+...
+Forking expressjs/express...
+Cloning into 'express'...
+```
+Another way of doing it, without actually having to go *into* the said repo, you could just fork it in place from your project dir itself:
+```sh
+$ gfork express --root node_modules --rm
+...
+```
+Changing `--root` to `./node_modules` makes it fork in `./node_modules/<repo>`, and `--rm` is basically `rm -rf ./*`.
+There's also a shortcut switch for `--root node_modules`: `--nm`
+
+And here's the kicker: you can fork/clone **multiple projects**!
+
+```sh
+$ gfork --nm --rm express cookie-session passport
+...
+Forking expressjs/express...
+Forking expressjs/cookie-session...
+Forking jaredhanson/passport...
+```
+
+All happen simultaneously and independently without stopping the other even if one errors out.
+
+
+
+And last but not the least, cloning is only half the job. There's always some initialization that needs to be done afterwards, like `npm install`. gfork lets you specify a command to execute in the respective project dir after cloning.
+
+gfork stores this command, along with its config in ~/.gfork and you can change it via gfork commandline itself. Arguments passed always take precedence over saved configs.
+
+
+## Operation
+
+**gfork** does 4 things when it clones a project:
+
+
+1. Forks a project on your behalf.
+
+    It asks you to login the first time you run it and uses GitHub REST API to get a token and stores it for future use. It doesn't store your credentials, only the token.
+
+    You can also supply the token yourself to avoid logging in; [here's how to get one][get-token].
 
     ```sh
-    git clone git@github.com:your/library.git
+    gfork --token YOUR_ACCESS_TOKEN
     ```
+
+2. Clones your fork locally, so that "origin" points to your fork.
 
     "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
 
-3. Set up original remote as "src"
+3. Sets up the original remote as "src"
 
-    ```sh
-    git remote add src git@github.com:original-author/some-library.git
-    ```
-
-    Pull any future updates
+    So that you can still pull any new changes
     ```sh
     git pull src
     ```
 
-    or [checkout pull requests][1] from the original source:
+    or [checkout other pull requests][1]:
     ```sh
     git fetch src pull/42/head:pull_request_#42
     ```
 
-4. Initialize the project after cloning
+4. And finally it allows you to execute custom command after cloning, generally to initialize the project. Such as:
 
     ```sh
-    touch $repo.sublime-project && npm i
+    touch $repo.sublime-project && npm install
     ```
 
-Then **ghfork** is for you! It does all this in one go from command line.
+    Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
+
+
+**gfork** understands following URLs
+
+* Github URLs:
+
+    * https://github.com/expressjs/express
+    * git@github.com:expressjs/express.git
+
+* Github user/repo combo:
+
+    * expressjs/cookie-session
+
+* npm package names:
+
+    * cookie-session
+
+* npm URLs:
+
+    * https://www.npmjs.com/package/express
+
+(npm package names/URLs must have their `repository.url` property set in their `package.json`)
 
 ## Installation
 
 ```sh
-npm install -g ghfork
+npm install -g gfork
 ```
 
 ## Usage:
@@ -56,60 +136,67 @@ npm install -g ghfork
 Initially let it authenticate you to GitHub and get an authentication token for future use:
 
 ```
-$ ghfork
+$ gfork
 Welcome! Please login to your GitHub account
-? Enter your username: hunter
+? Enter your username: <your-username>
 ? Enter your password: *******
 Authenticating...
-Welcome, AzureDiamond
-Config saved succesfully to file "~/.ghfork"
+Welcome!
+Config saved succesfully to file "~/.gfork"
 
 ? Clone a GitHub URL? (Y/n) No
 ? Edit the config? (Y/n) Yes
 
-? Token note: Token for ghfork
+? Token note: Token for gfork
 ? Name for original remote: src
 ? Domain name: github.com
 ? Command to run after cloning: echo done
-Config saved succesfully to file "~/.ghfork"
+Config saved succesfully to file "~/.gfork"
 ```
 
-You can run `ghfork` (without arguments) any time to set up this config.
+You can run `gfork` (without arguments) any time to set up this config.
+
+You can also supply the token yourself to avoid logging in; [here's how to get one][get-token].
+
+```sh
+gfork --token YOUR_ACCESS_TOKEN
+```
 
 #### Subsequent use
 
-Just pass it the URL to fork/clone
+Just pass it the URL/package-name to fork/clone
 
 ```
-$ ghfork https://github.com/original-owner/test-repo
+$ gfork express
 Authenticating...
-Welcome, you <your@email.com>
-Forking original-owner/test-repo...
-Cloning into 'test-repo'...
+Welcome!
+Forking expressjs/express...
+Cloning into 'express'...
 remote: Counting objects: 6, done.
 remote: Total 6 (delta 0), reused 0 (delta 0), pack-reused 6
 Receiving objects: 100% (6/6), done.
 Checking connectivity... done.
-Adding remote "src" => "git@github.com:original-owner/test-repo.git"
-origin  git@github.com:you/test-repo.git (fetch)
-origin  git@github.com:you/test-repo.git (push)
-src     git@github.com:original-owner/test-repo.git (fetch)
-src     git@github.com:original-owner/test-repo.git (push)
+Adding remote "src" => "git@github.com:expressjs/express.git"
+origin  git@github.com:<youuser>/express.git (fetch)
+origin  git@github.com:<youuser>/express.git (push)
+src     git@github.com:expressjs/express.git (fetch)
+src     git@github.com:expressjs/express.git (push)
 Setting user.name = "you"
-Setting user.email = "your@gmail.com"
+Setting user.email = "your@email.com"
 Executing custom commands...
+echo done
 done
 ```
 
 ## Options
 
 ```
-ghfork <GitHub project URL>
+gfork <GitHub project URL>
 
 Options:
   -u, --url         GitHub project URL to fork/clone [prompted if not provided]
   -t, --token       Specify token manually (otherwise auto-retrived)
-  -f, --config-file File to save config and token for future (default ~/.ghfork)
+  -f, --config-file File to save config and token for future (default ~/.gfork)
   -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
   -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
   -n, --token-note  Note to use when getting token (default "gh-token"). If you're gettig error "already exists", try changing this.
@@ -122,7 +209,7 @@ Options:
 
 ### Authentication
 
-Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.ghfork`
+Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.gfork`
 
 ### Fork & clone
 
@@ -138,7 +225,7 @@ touch $repo.sublime-project && npm i
 
 ### Config
 
-Settings are saved in config file (`~/.ghfork`) in JSON format on every command invocation.
+Settings are saved in config file (`~/.gfork`) in JSON format on every command invocation.
 
 ## Issues
 
@@ -150,8 +237,14 @@ If you get an error like this while logging in:
 It probably means you had logged in before and token has been lost. Try changing the `token-note`
 
 ```sh
-$ ghfork -n "Some random new token note"
+$ gfork -n "Some random new token note"
 ```
 
-  [1]: https://help.github.com/articles/checking-out-pull-requests-locally/
-  [2]: https://developer.github.com/v3/repos/forks/#create-a-fork
+[1]: https://help.github.com/articles/checking-out-pull-requests-locally/
+[2]: https://developer.github.com/v3/repos/forks/#create-a-fork
+
+
+[git-fork]: https://www.npmjs.com/package/git-fork
+[forked]: https://www.npmjs.com/package/forked
+
+[get-token]: https://help.github.com/articles/creating-an-access-token-for-command-line-use/

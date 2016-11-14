@@ -4,10 +4,10 @@ export function printHelp(exit) {
   console.log(`
     ${packageJson.description}
 
-    Usage: ghfork [OPTIONS] [<url>]
+    Usage: gfork [OPTIONS] [<url>]
       -u, --url         GitHub project URL to fork/clone [prompted if not provided]
       -t, --token       Specify token manually (otherwise auto-retrived)
-      -f, --config-file File to save config and token for future (default ~/.ghfork)
+      -f, --config-file File to save config and token for future (default ~/.gfork)
       -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
       -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
       -n, --token-note  Note to use when getting token (default "gh-token"). If you're gettig error "already exists", try changing this.
@@ -16,7 +16,7 @@ export function printHelp(exit) {
       -c, --command     Command to execute after cloning. Inside repo dir with $repo variable name.
 
     Examples:
-      ghfork https://github.com/some/library
+      gfork https://github.com/some/library
   `);
   exit && process.exit(1);
 }
@@ -24,7 +24,7 @@ export function printHelp(exit) {
 export function showUsage() {
   console.log(`
     Usage:
-      ghfork <url>
+      gfork <url>
     Options:
       -u, --url       GitHub URL to fork    [required]
       -t, --token     GitHub auth token

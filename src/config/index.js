@@ -29,7 +29,7 @@ class Config {
 
     config.args = args;
 
-    config.configFile = args.configFile || args.f || path.resolve(os.homedir(), '.ghfork');
+    config.configFile = args.configFile || args.f || path.resolve(os.homedir(), '.gfork');
     if (config.configFile) {
       let configFileContents;
       try {
@@ -80,7 +80,7 @@ class Config {
     }
 
     config.token = args.token || args.t || config.token;
-    config.tokenNote = args.tokenNote || args.n || config.tokenNote || 'Token for ghfork';
+    config.tokenNote = args.tokenNote || args.n || config.tokenNote || 'Token for gfork';
 
     config.remote = args.remote || args.r || config.remote || 'src';
     config.domain = args.domain || args.d || config.domain || 'github.com';
