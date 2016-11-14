@@ -2,11 +2,12 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs-promise';
 import yargs from 'yargs';
-import { input } from './utils/prompt';
-import { hiddenProp } from './utils/object';
-import { printHelp } from './utils/help';
+import { input } from '../utils/prompt';
+import { hiddenProp } from '../utils/object';
+import { printHelp } from '../utils/help';
+import defaults from './defaults';
 
-const { argv } = yargs;
+const { argv } = yargs.options(defaults);
 
 if (argv.h || argv.help) {
   printHelp(true);
