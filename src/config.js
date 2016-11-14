@@ -53,9 +53,7 @@ class Config {
     config.root = args.root || args.cwd || process.cwd();
     config.here = args.here || args._.includes('.');
     if (args._.includes('.')) {
-      console.log({ before: args._ });
       args._.splice(args._.indexOf('.'), 1);
-      console.log({ after: args._ });
     }
 
     config.rm = args.rm;
@@ -79,6 +77,7 @@ class Config {
     config.domain = args.domain || args.d || config.domain || 'github.com';
 
     config.command = args.command || args.c || config.command;
+    config.multiCommand = args.multiCommand || args.command || args.c || config.multiCommand;
   }
 
   async saveToFile(silent) {

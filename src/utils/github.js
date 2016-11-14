@@ -34,7 +34,7 @@ export function getOwnerRepoFromGithubUrl(url) {
     throw new Error(`Couldn't extract owner/repo from url "${url}"`)
   }
   const [, owner, repo] = result;
-  return { owner, repo };
+  return { owner, repo, url };
 }
 
 export function getPackageNameFromNpmUrl(url) {

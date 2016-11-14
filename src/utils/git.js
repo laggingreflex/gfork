@@ -3,8 +3,12 @@ import { join } from 'path';
 import { exec } from './child-process';
 
 export async function clone({ repo, url, cwd, here, rm }) {
-  if (rm) await remove(join(cwd, (here ? '.' : repo)));
-  await exec('git', ['clone', url, here && '.'], { cwd });
+  if (rm) {
+    const rmDir = join(cwd, repo);
+    console.log(`Removing dir '${repo}'...`);
+    await remove(rmDir);
+  }
+  await exec('git', ['clone', url, repo], { cwd });
 }
 
 export async function addRemote({ cwd, name = 'src', url }) {

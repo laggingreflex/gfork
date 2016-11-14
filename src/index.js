@@ -1,5 +1,6 @@
 import 'source-map-support/register';
 import fs from 'fs-promise';
+import { join, basename } from 'path';
 import config from './config';
 import {
   getTokenFromGitHub,
@@ -70,7 +71,7 @@ async function main() {
   }
 
   if (!config.urls) {
-    config.urls = config.url;
+    config.urls = [config.url];
   }
 
   return Promise.all(config.urls.map((url => {
@@ -81,38 +82,45 @@ async function main() {
   })));
 }
 
-async function main2(sourceRepoUrl) {
-  const { owner, repo } = await decodeUrl(sourceRepoUrl);
+async function main2(input) {
+  const { owner, repo } = await decodeUrl(input);
   await fork({ owner, repo, user: config.username });
   const forkedUrl = `git@github.com:${config.username}/${repo}.git`;
+  const sourceUrl = `git@github.com:${owner}/${repo}.git`;
 
   await fs.ensureDir(config.root);
 
   await clone({
-    repo,
     url: forkedUrl,
-    cwd: config.root,
-    here: config.here,
+    repo: config.here ? basename(config.root) : repo,
+    cwd: config.here ? join(config.root, '..') : config.root,
     rm: config.rm,
   });
 
   await addRemote({
-    cwd: config.here ? config.root : repo,
+    cwd: join(config.root, config.here ? '.' : repo),
     name: config.remote,
-    url: sourceRepoUrl
+    url: sourceUrl
   });
 
   await setUser({
-    cwd: config.here ? config.root : repo,
+    cwd: join(config.root, config.here ? '.' : repo),
     name: config.username,
     email: config.email
   });
 
-  if (config.command) {
-    console.log('Executing custom commands...');
-    const [command, ...args] = config.command.split(/[\s]+/g);
-    await exec(command, args, {
-      cwd: config.here ? config.root : repo,
+  let command;
+  if (config.urls > 1 && config.multiCommand) {
+    command = config.multiCommand;
+  } else {
+    command = config.command;
+  }
+  if (command) {
+    console.log('Executing custom command: `' + command + '`...');
+    const [cmd, ...args] = command.split(/[\s]+/g);
+    await exec(cmd, args, {
+      // cwd: config.here ? config.root : repo,
+      cwd: join(config.root, config.here ? '.' : repo),
       env: { repo },
     });
   }
