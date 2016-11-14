@@ -1,27 +1,27 @@
 import { prompt } from 'inquirer';
 
-export async function confirm( message, def ) {
-  return ( await prompt( [ {
+export async function confirm(message, def) {
+  return (await prompt([{
     type: 'confirm',
     name: 'confirm',
     message,
     default: def || false
-  } ] ) ).confirm;
+  }])).confirm;
 }
 
-export async function input( message, def ) {
-  return ( await prompt( [ {
+export async function input(message, def) {
+  return (await prompt([{
     type: 'input',
     name: 'input',
     default: def,
     message
-  } ] ) ).input;
+  }])).input;
 }
 
-export async function password( message ) {
-  return ( await prompt( [ {
+export async function password(message) {
+  return (await prompt([{
     type: 'password',
     name: 'password',
     message
-  } ] ) ).password;
+  }])).password;
 }

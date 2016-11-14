@@ -19,11 +19,9 @@ describe.skip('git.clone', async() => {
     assert(files.length > 3);
   });
   before(async() => {
-    try {rimraf(repo);} catch(err){}
+    try { rimraf(repo); } catch (err) {}
   });
   after(async() => {
     rimraf(repo);
   });
 });
-
-

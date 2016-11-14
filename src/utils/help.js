@@ -1,7 +1,7 @@
 import packageJson from '../../package.json';
 
-export function printHelp( exit ) {
-  console.log( `
+export function printHelp(exit) {
+  console.log(`
     ${packageJson.description}
 
     Usage: ghfork [OPTIONS] [<url>]
@@ -17,12 +17,12 @@ export function printHelp( exit ) {
 
     Examples:
       ghfork https://github.com/some/library
-  ` );
-  exit && process.exit( 1 );
+  `);
+  exit && process.exit(1);
 }
 
 export function showUsage() {
-  console.log( `
+  console.log(`
     Usage:
       ghfork <url>
     Options:
@@ -30,19 +30,19 @@ export function showUsage() {
       -t, --token     GitHub auth token
       -u, --username  GitHub username
       -p, --password  GitHub password
-  ` );
+  `);
 }
 
-export function showErrors( errors ) {
-  if ( errors instanceof Array ) {
-    console.error( `
+export function showErrors(errors) {
+  if (errors instanceof Array) {
+    console.error(`
       Errors:
         ${errors.join('\n      ')}
-    ` );
+    `);
   } else {
-    console.error( `
+    console.error(`
       Error: ${error}
-    ` );
+    `);
   }
-  process.exit( 1 );
+  process.exit(1);
 }
