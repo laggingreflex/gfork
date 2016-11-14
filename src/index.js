@@ -1,11 +1,12 @@
 import 'source-map-support/register';
+import fs from 'fs-promise';
 import config from './config';
 import {
   getTokenFromGitHub,
   authenticateWithToken,
 } from './utils/auth';
 import {
-  decodeGitHubUrl,
+  decodeUrl,
   fork
 } from './utils/github';
 import {
@@ -57,11 +58,9 @@ async function main() {
     }
   }
 
-
-  let sourceRepoUrl = config.url;
-  if (!sourceRepoUrl) {
+  if (!config.url) {
     if (await confirm('Clone a GitHub URL?', true)) {
-      sourceRepoUrl = config.url = prompt(`Please enter the GitHub URL to clone: `);
+      config.url = prompt(`Please enter the GitHub URL to clone: `);
     } else if (await confirm('Edit the config?', true)) {
       await editConfig();
       process.exit(0);
@@ -70,22 +69,52 @@ async function main() {
     }
   }
 
-  const { owner, repo } = decodeGitHubUrl({ url: sourceRepoUrl });
-  sourceRepoUrl = `git@github.com:${owner}/${repo}.git`;
+  if (!config.urls) {
+    config.urls = config.url;
+  }
 
-  await fork({ url: sourceRepoUrl, user: config.username });
+  return Promise.all(config.urls.map((url => {
+    return main2(url).catch(error => {
+      // console.error(error);
+      console.error('ERROR:', error.stdout || error.message);
+    });
+  })));
+}
+
+async function main2(sourceRepoUrl) {
+  const { owner, repo } = await decodeUrl(sourceRepoUrl);
+  await fork({ owner, repo, user: config.username });
   const forkedUrl = `git@github.com:${config.username}/${repo}.git`;
 
-  await clone({ url: forkedUrl });
+  await fs.ensureDir(config.root);
 
-  await addRemote({ cwd: repo, name: config.remote, url: sourceRepoUrl });
+  await clone({
+    repo,
+    url: forkedUrl,
+    cwd: config.root,
+    here: config.here,
+    rm: config.rm,
+  });
 
-  await setUser({ cwd: repo, name: config.username, email: config.email });
+  await addRemote({
+    cwd: config.here ? config.root : repo,
+    name: config.remote,
+    url: sourceRepoUrl
+  });
+
+  await setUser({
+    cwd: config.here ? config.root : repo,
+    name: config.username,
+    email: config.email
+  });
 
   if (config.command) {
     console.log('Executing custom commands...');
     const [command, ...args] = config.command.split(/[\s]+/g);
-    await exec(command, args, { cwd: repo, env: { repo }, });
+    await exec(command, args, {
+      cwd: config.here ? config.root : repo,
+      env: { repo },
+    });
   }
 }
 

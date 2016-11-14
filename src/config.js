@@ -21,6 +21,10 @@ class Config {
     hiddenProp(config, 'configFileContents');
     hiddenProp(config, 'configFileNotExistsFlag');
     hiddenProp(config, 'url');
+    hiddenProp(config, 'urls');
+    hiddenProp(config, 'root');
+    hiddenProp(config, 'here');
+    hiddenProp(config, 'rm');
 
     config.args = args;
 
@@ -46,7 +50,27 @@ class Config {
     config.username = config.username || args.username || args.u;
     config.password = config.password || args.password || args.p;
 
-    config.url = args.url || args.library || args.u || args.l || args._[0];
+    config.root = args.root || args.cwd || process.cwd();
+    config.here = args.here || args._.includes('.');
+    if (args._.includes('.')) {
+      console.log({ before: args._ });
+      args._.splice(args._.indexOf('.'), 1);
+      console.log({ after: args._ });
+    }
+
+    config.rm = args.rm;
+
+    config.url = args.url || args.library || args.u || args.l || args._;
+    if (config.url instanceof Array) {
+      if (config.url.length > 1) {
+        config.urls = config.url;
+      }
+      config.url = config.url[0];
+    }
+
+    if (config.urls && config.here) {
+      throw new Error(`Can't clone multiple repos in the same dir.`);
+    }
 
     config.token = config.token || args.token || args.t;
     config.tokenNote = config.tokenNote || args.tokenNote || args.n || 'Token for ghfork';

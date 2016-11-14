@@ -1,7 +1,10 @@
+import { remove } from 'fs-promise';
+import { join } from 'path';
 import { exec } from './child-process';
 
-export async function clone({ url }) {
-  await exec('git', ['clone', url]);
+export async function clone({ repo, url, cwd, here, rm }) {
+  if (rm) await remove(join(cwd, (here ? '.' : repo)));
+  await exec('git', ['clone', url, here && '.'], { cwd });
 }
 
 export async function addRemote({ cwd, name = 'src', url }) {
