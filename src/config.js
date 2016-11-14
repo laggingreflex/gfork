@@ -47,8 +47,8 @@ class Config {
       }
     }
 
-    config.username = config.username || args.username || args.u;
-    config.password = config.password || args.password || args.p;
+    config.username = args.username || args.u || config.username;
+    config.password = args.password || args.p || config.password;
 
     config.root = args.root || args.cwd || process.cwd();
     config.here = args.here || args._.includes('.');
@@ -72,13 +72,13 @@ class Config {
       throw new Error(`Can't clone multiple repos in the same dir.`);
     }
 
-    config.token = config.token || args.token || args.t;
-    config.tokenNote = config.tokenNote || args.tokenNote || args.n || 'Token for ghfork';
+    config.token = args.token || args.t || config.token;
+    config.tokenNote = args.tokenNote || args.n || config.tokenNote || 'Token for ghfork';
 
-    config.remote = config.remote || args.remote || args.r || 'src';
-    config.domain = config.domain || args.domain || args.d || 'github.com';
+    config.remote = args.remote || args.r || config.remote || 'src';
+    config.domain = args.domain || args.d || config.domain || 'github.com';
 
-    config.command = config.command || args.command || args.c;
+    config.command = args.command || args.c || config.command;
   }
 
   async saveToFile(silent) {
