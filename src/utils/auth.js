@@ -19,8 +19,8 @@ export async function getTokenFromGitHub({
   return token;
 };
 
-export async function authenticateWithToken({ token }) {
-  console.log(`Authenticating...`);
+export async function authenticateWithToken({ token, silent = false }) {
+  silent || console.log(`Authenticating...`);
 
   github.authenticate({
     type: 'oauth',

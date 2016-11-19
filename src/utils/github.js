@@ -1,5 +1,8 @@
+import _ from 'lodash';
 import GitHubApi from 'github';
-import request from 'client-request';
+import request from 'client-request/promise';
+import resolveRedirect from 'resolve-redirect';
+import resolveGitUrl from 'github-url-from-git';
 
 const github = new GitHubApi({});
 
@@ -12,22 +15,28 @@ export async function decodeUrl(input) {
     // just a package-name
     const packageName = input;
     const githubUrl = await geGithubUrlFromNpmPackageName(packageName);
-    return getOwnerRepoFromGithubUrl(githubUrl);
+    return await getOwnerRepoFromGithubUrl(githubUrl);
   } else if (input.match(/^[a-zA-Z0-9-_.]+\/[a-zA-Z0-9-_.]+$/)) {
     // owner/package-name
-    return getOwnerRepoFromGithubUrl('https://github.com/' + input);
+    return await getOwnerRepoFromGithubUrl('https://github.com/' + input);
   } else if (input.match(/npmjs.com/)) {
     // npm URL
     const packageName = getPackageNameFromNpmUrl(input);
     const githubUrl = await geGithubUrlFromNpmPackageName(input);
-    return getOwnerRepoFromGithubUrl(githubUrl);
+    return await getOwnerRepoFromGithubUrl(githubUrl);
   } else {
     // assume github URL
-    return getOwnerRepoFromGithubUrl(input);
+    return await getOwnerRepoFromGithubUrl(input);
   }
 }
 
-export function getOwnerRepoFromGithubUrl(url) {
+export async function getOwnerRepoFromGithubUrl(url) {
+  if (url.match(/^git\+http/)) {
+    url = url.substr(4);
+  }
+  if (url.match(/^http/)) {
+    url = await resolveRedirect(url);
+  }
   const regexp = /github.com[\/\:](.*?)\/(.*?)(\/|$|\.git)/;
   const result = regexp.exec(url);
   if (!result || result.length < 4) {
@@ -47,22 +56,43 @@ export function getPackageNameFromNpmUrl(url) {
   return packageName;
 }
 
-export function geGithubUrlFromNpmPackageName(packageName) {
-  return new Promise((k, e) => request({
-    uri: 'https://registry.npmjs.org/' + packageName,
-    json: true
-  }, function(err, response, body) {
-    if (err) e(err);
-    else if (body && body.repository && body.repository.url) k(body.repository.url);
-    else e(new Error(`Couldn't find {package: ${packageName}} on npmjs registry`));
-  }));
+export async function geGithubUrlFromNpmPackageName(packageName) {
+  let json, url;
+  try {
+    json = await request({
+      uri: 'https://registry.npmjs.org/' + packageName,
+      json: true
+    });
+  } catch (error) {
+    throw new Error(`Couldn't retrieve {packageName: ${packageName}} from npmjs registry. ` + error.message);
+  }
+  url = _.get(json, 'repository.url');
+  if (!url) {
+    throw new Error(`{packageName: ${packageName}} doesn't seem to have a repository.url`);
+  }
+  if (url.includes('git')) {
+    url = resolveGitUrl(url);
+  }
+  return url;
 }
 
 
-export async function fork({ owner, repo, user }) {
-  console.log(`Forking ${owner}/${repo}...`);
-  const { full_name } = await github.repos.fork({ user: owner, repo });
-  if (full_name !== `${user}/${repo}`) {
-    throw new Error(`Couldn't fork`)
+export async function fork({ owner, repo, user, attempt = 1, err }) {
+  if (attempt <= 1) {
+    console.log(`Forking ${owner}/${repo}...`);
+  } else if (attempt <= 3) {
+    console.error(repo, err.message);
+    console.log(`Forking ${owner}/${repo}... (attempt: ${attempt})`);
+  } else {
+    throw err;
   }
+  try {
+    const { full_name } = await github.repos.fork({ user: owner, repo });
+    if (full_name !== `${user}/${repo}`) {
+      throw new Error(`Couldn't fork`)
+    }
+  } catch (err) {
+    return fork({ owner, repo, user, attempt: attempt + 1, err })
+  }
+
 }

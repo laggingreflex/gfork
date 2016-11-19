@@ -4,8 +4,7 @@ export function printHelp(exit) {
   console.log(`
     ${packageJson.description}
 
-    Usage: gfork [OPTIONS] [<url>]
-      -u, --url         GitHub project URL to fork/clone [prompted if not provided]
+    Usage: gfork [OPTIONS] [package(s)]
       -t, --token       Specify token manually (otherwise auto-retrived)
       -f, --config-file File to save config and token for future (default ~/.gfork)
       -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]

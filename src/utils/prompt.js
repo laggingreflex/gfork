@@ -1,27 +1,33 @@
-import { prompt } from 'inquirer';
+import Enquirer  from 'enquirer';
+import Confirm from 'prompt-confirm';
+import Password from 'prompt-password';
+
+const enquirer = new Enquirer();
+
+enquirer.register('confirm', Confirm);
+enquirer.register('password', Password);
 
 export async function confirm(message, def) {
-  return (await prompt([{
-    type: 'confirm',
+  return (await enquirer.prompt({
     name: 'confirm',
+    type: 'confirm',
+    default: def || false,
     message,
-    default: def || false
-  }])).confirm;
+  })).confirm;
 }
 
 export async function input(message, def) {
-  return (await prompt([{
-    type: 'input',
+  return (await enquirer.prompt({
     name: 'input',
+    message,
     default: def,
-    message
-  }])).input;
+  })).input;
 }
 
-export async function password(message) {
-  return (await prompt([{
-    type: 'password',
+export async function password(message, def) {
+  return (await enquirer.prompt({
     name: 'password',
-    message
-  }])).password;
+    type: 'password',
+    message,
+  })).password;
 }
