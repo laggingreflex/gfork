@@ -4,15 +4,20 @@ export function printHelp(exit) {
   console.log(`
     ${packageJson.description}
 
-    Usage: gfork [OPTIONS] [package(s)]
-      -t, --token       Specify token manually (otherwise auto-retrived)
-      -f, --config-file File to save config and token for future (default ~/.gfork)
-      -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
-      -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
-      -n, --token-note  Note to use when getting token (default "gh-token"). If you're gettig error "already exists", try changing this.
-      -r, --remote      Remote name to use for original library (default "src")
-      -d, --domain      Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
-      -c, --command     Command to execute after cloning. Inside repo dir with $repo variable name.
+    Usage: gfork [OPTIONS] [NPM library or GitHub project]
+
+      -c, --command       Command to execute after cloning. Inside repo dir with $repo variable name.
+      -F, --forks-dir     Directory to put new forks in.
+      --root-dir-command  Command to execute in root-dir after --command exits cleanly.
+      -R, --rm-rf         Remove everything in target dir before cloning.
+      -N, --nm            Shortcut for --forks-dir="./node_modules"
+      -t, --token         Specify token manually (otherwise auto-retrieved)
+      -n, --token-note    Note to use when getting token (default "Tokek for gfork").
+      -f, --config-file   File to save config and token for future (default ~/.gfork)
+      -u, --username      Your GitHub username (only 1st time) [optional: prompted if necessary]
+      -p, --password      Your GitHub password (only 1st time) [optional: prompted if necessary]
+      -r, --remote        Remote name to use for original library (default "src")
+      -d, --domain        Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
 
     Examples:
       gfork https://github.com/some/library
