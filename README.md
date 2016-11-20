@@ -4,7 +4,32 @@
 
 Fork, clone, init github/npm projects from command-line.
 
-Wouldn't it be cool if you could fork and clone a project just like you install an npm module?
+## Installation
+
+```sh
+npm install -g gfork
+```
+
+## Usage
+
+```
+gfork [OPTIONS] [NPM library or GitHub project]
+
+Options:
+  -u, --url         GitHub project URL to fork/clone [prompted if not provided]
+  -t, --token       Specify token manually (otherwise auto-retrieved)
+  -f, --config-file File to save config and token for future (default ~/.gfork)
+  -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
+  -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
+  -n, --token-note  Note to use when getting token (default "gh-token"). If you're getting error "already exists", try changing this.
+  -r, --remote      Remote name to use for original library (default "src")
+  -d, --domain      Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
+  -c, --command     Command to execute after cloning. Inside repo dir with $repo variable name.
+```
+
+## Description
+
+Wouldn't it be awesome if you could fork and clone a github project of the npm module just like you installed it?
 
 ```sh
 $ gfork express
@@ -12,12 +37,26 @@ $ gfork express
 Forking expressjs/express...
 Cloning into 'express'...
 ```
-By default it clones it in `./express`. To replace your `./node_modules/express` do this:
+
+gfork finds the github repository of the npm module and forks it under your account and clones your forked repo.
+
+You can also specify the github project directly:
+
+```sh
+$ gfork https://github.com/expressjs/express
+# or just username/lib combo
+$ gfork expressjs/express
+```
+
+
+By default it will clone it in `current-dir/express`, but you can have it remove your `./node_modules/express` and clone it there instead (just like `npm install` would have):
 
 ```sh
 $ gfork express --forks-dir node_modules --rm-rf
+# or
+$ gfork express -NR
 ```
-(there's also shortcut switches for `--root node_modules`: `-N`, and for `--rm-rf`: `-R`)
+(shortcut switches for `--root node_modules`: `-N`, and for `--rm-rf`: `-R`)
 
 You can even fork/clone multiple projects! All simultaneously and independently:
 
@@ -29,7 +68,7 @@ Forking expressjs/cookie-session...
 Forking jaredhanson/passport...
 ```
 
-gfork also lets you specify a command to execute after cloning in the respective project dir:
+Just cloning isn't enough though, you probably have to execute some initial commands in the cloned project dir(s). gfork can handle that for you:
 
 ```sh
 $ gfork -NR express cookie-session passport --command="npm install"
@@ -46,7 +85,7 @@ Executing command: `npm install` in 'passport'...
 
 ### **Protip**
 
-Instead of directly cloning inside the `node_modules` dir of your current project, you should clone it in a separate dir and [**use `npm link`**][npm link] to link those projects into your current project's `node_modules`. It'll allow you to use the same forked module across different projects. You can specify the `--forks-dir` as any dir on your computer.
+Instead of directly cloning inside your `./project/node_modules/…` dir, you should clone it in a separate dir and [**use `npm link`**][npm link] to link those projects into your current project's `node_modules`. It'll allow you to use the same forked module across different projects. You can specify the `--forks-dir` as any dir on your computer.
 
 ```sh
 $ gfork express --forks-dir /home/my-forks
@@ -78,42 +117,44 @@ $ npm link express
 ./node_modules/express -> ~/.npm/node_modules/express -> ~/my-forks/express
 ```
 
-And last but not the least, gfork stores these command configs, along with its other configs (token, etc.) in ~/.gfork so you can have this as your default action for all forks. You can edit this config with `gfork -e`. Passed arguments always take precedence so you can always override the saved commands.
+But you don't have to type that long command every time,
+gfork can store these command configs so you can have this as your default action for all forks, and you **just** have to run `gfork express`.
 
+### Detailed operation
 
+gfork does 4 things when it clones a project:
 
-**gfork** understands following URLs
+1. Forks a project on your behalf.
 
-* npm package names:
+    It asks you to login the first time you run it and uses GitHub REST API to get a token and stores it for future use. It doesn't store your credentials, only the token. [You can also supply the token yourself](#first-time-setup).
 
-    * cookie-session
+2. Clones your fork locally, so that "origin" points to your fork.
 
-* npm URLs:
+    "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
 
-    * https://www.npmjs.com/package/express
+3. Sets up the original remote as "src"
 
-* Github user/repo combo:
+    So that you can still pull any new changes
+    ```sh
+    git pull src
+    ```
 
-    * expressjs/cookie-session
+    or [checkout other pull requests][1]:
+    ```sh
+    git fetch src pull/42/head:pull_request_#42
+    ```
 
-* Github URLs:
+4. And finally it allows you to execute custom command after cloning, generally to initialize the project. Such as:
 
-    * https://github.com/expressjs/express
-    * git@github.com:expressjs/express.git
+    ```sh
+    npm install && touch $repo.sublime-project
+    ```
 
-(npm package names/URLs must have their `repository.url` property set in their `package.json`)
+    Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
 
-## Installation
+## Setup
 
-```sh
-npm install -g gfork
-```
-
-## Usage:
-
-### First time setup
-
-Initially let it authenticate you to GitHub and get an authentication token for future use:
+Initially gfork needs to authenticate you to GitHub (for forking). It'll ask you for your username/password and get an authentication token for future use:
 
 ```
 $ gfork
@@ -158,22 +199,6 @@ echo done
 done
 ```
 
-## Options
-
-```
-gfork <GitHub project URL>
-
-Options:
-  -u, --url         GitHub project URL to fork/clone [prompted if not provided]
-  -t, --token       Specify token manually (otherwise auto-retrieved)
-  -f, --config-file File to save config and token for future (default ~/.gfork)
-  -u, --username    Your GitHub username (only 1st time) [optional: prompted if necessary]
-  -p, --password    Your GitHub password (only 1st time) [optional: prompted if necessary]
-  -n, --token-note  Note to use when getting token (default "gh-token"). If you're getting error "already exists", try changing this.
-  -r, --remote      Remote name to use for original library (default "src")
-  -d, --domain      Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
-  -c, --command     Command to execute after cloning. Inside repo dir with $repo variable name.
-```
 
 ## Features
 
@@ -210,38 +235,6 @@ It probably means you had logged in before and token has been lost. Try changing
 $ gfork -n "Some random new token note"
 ```
 
-## Detailed operation
-
-**gfork** does 4 things when it clones a project:
-
-
-1. Forks a project on your behalf.
-
-    It asks you to login the first time you run it and uses GitHub REST API to get a token and stores it for future use. It doesn't store your credentials, only the token. [You can also supply the token yourself](#first-time-setup).
-
-2. Clones your fork locally, so that "origin" points to your fork.
-
-    "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
-
-3. Sets up the original remote as "src"
-
-    So that you can still pull any new changes
-    ```sh
-    git pull src
-    ```
-
-    or [checkout other pull requests][1]:
-    ```sh
-    git fetch src pull/42/head:pull_request_#42
-    ```
-
-4. And finally it allows you to execute custom command after cloning, generally to initialize the project. Such as:
-
-    ```sh
-    touch $repo.sublime-project && npm install
-    ```
-
-    Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
 
 
 [1]: https://help.github.com/articles/checking-out-pull-requests-locally/
