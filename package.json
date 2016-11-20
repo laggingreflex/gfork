@@ -21,6 +21,7 @@
     "github": "^3.1.0",
     "github-url-from-git": "^1.4.0",
     "github-url-from-username-repo": "^1.0.2",
+    "lodash": "^4.17.2",
     "prompt-confirm": "^0.2.1",
     "prompt-password": "^0.1.1",
     "resolve-redirect": "^0.0.3",
