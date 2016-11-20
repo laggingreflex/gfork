@@ -117,7 +117,7 @@ $ npm link express
 ./node_modules/express -> ~/.npm/node_modules/express -> ~/my-forks/express
 ```
 
-But you don't have to type that long command every time,
+You don't have to type that long command every time,
 gfork can store these command configs so you can have this as your default action for all forks, and you **just** have to run `gfork express`.
 
 
@@ -206,35 +206,39 @@ gfork does 4 things when it clones a project:
 
 ### Authentication
 
-Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.gfork`
+Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.gfork`.
 
 ### Fork & clone
 
 It uses the [GitHub API][2] to fork, and uses local `git` to do the rest.
 
-### Command
-
-After successfully cloning it can execute specified commands from inside the repo dir. It also makes the repo name available as an environment variable: `$repo` which you can use in your command:
-
-```
-touch $repo.sublime-project && npm i
-```
-
 ### Config
 
-Settings are saved in config file (`~/.gfork`) in JSON format on every command invocation.
+Settings are saved in config file (`~/.gfork`) in JSON format. You can edit the settings directly or by running `gfork --edit-config`
+
+
+### Commands
+
+gfork gets you specify a `--command` to run in the project dir and a `--root-dir-command` to run in the root dir. The root-dir command is run after the command in the project dir completes and **only** if it exits cleanly.
+
+In both commands the repo name is available as an environment variable: `$repo`
+
 
 ## Issues
 
-If you get an error like this while logging in:
+Feel free to [open issues](issues) and submit PRs!
+
+### Known issues
+
+If your token isn't working and you get an error like this:
 
 ```json
 {"message":"Validation Failed","errors":[{"resource":"OauthAccess","code":"already_exists","field":"description"}],"documentation_url":"https://developer.github.com/v3/oauth_authorizations/#create-a-new-authorization"}
 ```
-It probably means you had logged in before and token has been lost. Try changing the `token-note`
+Try changing the `token-note`
 
 ```sh
-$ gfork -n "Some random new token note"
+$ gfork --edit-config --token-note "Some random new token note"
 ```
 
 
