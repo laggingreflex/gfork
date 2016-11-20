@@ -229,7 +229,7 @@ In both commands the repo name is available as an environment variable: `$repo`
 
 ## Issues
 
-Feel free to [open issues](issues) and submit PRs!
+Feel free to [open issues](../../issues) and submit PRs!
 
 ### Known issues
 
