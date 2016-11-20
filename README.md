@@ -56,7 +56,7 @@ $ gfork express --forks-dir node_modules --rm-rf
 # or
 $ gfork express -NR
 ```
-(shortcut switches for `--root node_modules`: `-N`, and for `--rm-rf`: `-R`)
+(shortcut switches for `--forks-dir node_modules`: `-N`, and for `--rm-rf`: `-R`)
 
 You can even fork/clone multiple projects! All simultaneously and independently:
 
@@ -120,37 +120,6 @@ $ npm link express
 But you don't have to type that long command every time,
 gfork can store these command configs so you can have this as your default action for all forks, and you **just** have to run `gfork express`.
 
-### Detailed operation
-
-gfork does 4 things when it clones a project:
-
-1. Forks a project on your behalf.
-
-    It asks you to login the first time you run it and uses GitHub REST API to get a token and stores it for future use. It doesn't store your credentials, only the token. [You can also supply the token yourself](#first-time-setup).
-
-2. Clones your fork locally, so that "origin" points to your fork.
-
-    "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
-
-3. Sets up the original remote as "src"
-
-    So that you can still pull any new changes
-    ```sh
-    git pull src
-    ```
-
-    or [checkout other pull requests][1]:
-    ```sh
-    git fetch src pull/42/head:pull_request_#42
-    ```
-
-4. And finally it allows you to execute custom command after cloning, generally to initialize the project. Such as:
-
-    ```sh
-    npm install && touch $repo.sublime-project
-    ```
-
-    Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
 
 ## Setup
 
@@ -199,6 +168,39 @@ echo done
 done
 ```
 
+## Details
+
+### Operation
+
+gfork does 4 things when it clones a project:
+
+1. Forks a project on your behalf.
+
+    It asks you to login the first time you run it and uses GitHub REST API to get a token and stores it for future use. It doesn't store your credentials, only the token. [You can also supply the token yourself](#first-time-setup).
+
+2. Clones your fork locally, so that "origin" points to your fork.
+
+    "origin" points to your fork so you can push changes to it that automatically show up as prompts to make new pull requests on the original author's library.
+
+3. Sets up the original remote as "src"
+
+    So that you can still pull any new changes
+    ```sh
+    git pull src
+    ```
+
+    or [checkout other pull requests][1]:
+    ```sh
+    git fetch src pull/42/head:pull_request_#42
+    ```
+
+4. And finally it allows you to execute custom command after cloning, generally to initialize the project. Such as:
+
+    ```sh
+    npm install && touch $repo.sublime-project
+    ```
+
+    Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
 
 ## Features
 
