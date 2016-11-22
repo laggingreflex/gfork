@@ -26,8 +26,12 @@ class Config {
     hiddenProp(config, 'root');
     hiddenProp(config, 'here');
     hiddenProp(config, 'rmRf');
+    hiddenProp(config, 'nodeModules');
     hiddenProp(config, 'pullRequest');
+    hiddenProp(config, 'fetchPr');
+    hiddenProp(config, 'check');
     hiddenProp(config, 'editConfig');
+    hiddenProp(config, 'noSavedConfig');
     hiddenProp(config, 'loggedIn');
 
     config.args = args;
@@ -51,8 +55,8 @@ class Config {
       }
     }
 
-    config.username = args.username || args.u || config.username;
-    config.password = args.password || args.p || config.password;
+    config.username = args.username || args.u || !config.noSavedConfig && config.username;
+    config.password = args.password || args.p || !config.noSavedConfig && config.password;
 
     config.root = process.cwd();
 
@@ -61,14 +65,16 @@ class Config {
       args._ = args._.filter(a => a !== '.');
     }
 
-    config.forksDir = args.forksDir || args.forkDir || args.fd || args.F || config.forksDir;
+    config.noSavedConfig = args.noSavedConfig || args.X;
+
+    config.forksDir = args.forksDir || args.forkDir || args.fd || args.F || !config.noSavedConfig && config.forksDir;
     if (config.forksDir === true) {
-      throw new Error(`forksDir path must be a string.`);
+      throw new Error('forksDir path must be a string.');
     }
     if (config.here) {
       delete config.forksDir;
     }
-    if (args.nm || args.N) {
+    if (args.nodeModules || args.N) {
       config.forksDir = 'node_modules';
     }
 
@@ -77,33 +83,42 @@ class Config {
     config.urls = args._;
 
     if (config.urls.length > 1 && config.here) {
-      throw new Error(`Can't clone multiple repos in the same dir.`);
+      throw new Error('Can\'t clone multiple repos in the same dir.');
     }
     if (config.urls.length < 1 && config.here) {
       config.urls = [path.basename(config.root)];
     }
 
     config.token = args.token || args.t || config.token;
-    config.tokenNote = args.tokenNote || args.n || config.tokenNote || 'Token for gfork';
+    config.tokenNote = args.tokenNote || args.n || !config.noSavedConfig && config.tokenNote || 'Token for gfork';
 
-    config.remote = args.remote || args.r || config.remote || 'src';
-    config.domain = args.domain || args.d || config.domain || 'github.com';
+    config.remote = args.remote || args.r || !config.noSavedConfig && config.remote || 'src';
+    config.domain = args.domain || args.d || !config.noSavedConfig && config.domain || 'github.com';
 
-    config.command = args.command || args.cmd || args.c || config.command;
-    config.rootDirCommand = args.rootDirCommand || args.rdc || config.rootDirCommand;
+    config.command = args.command || args.cmd || args.c || !config.noSavedConfig && config.command;
+    config.rootDirCommand = args.rootDirCommand || args.rdc || !config.noSavedConfig && config.rootDirCommand;
 
-    config.pullRequest = args.pullRequest || args.pr || args.p;
+    config.pullRequest = args.pullRequest || args.L;
+    config.fetchPr = args.fetchPr || args.H;
+    if (config.pullRequest && !config.here) {
+      throw new Error('pull-request can only be invoked from repo-dir and requires --here flag (or .)');
+    }
+    if (config.fetchPr && !config.here) {
+      throw new Error('fetch-pr can only be invoked from repo-dir and requires --here flag (or .)');
+    }
 
-    config.editConfig = args.editConfig || args.e
+    config.check = args.check;
+
+    config.editConfig = args.editConfig || args.e;
   }
 
   async saveToFile(silent) {
     const config = this;
     const args = config.args;
 
-    for (const key in config)
-      if (config.propertyIsEnumerable(key) && !(config[key] && config[key].length))
-        delete config[key];
+    for (const key in config) {
+      if (config.propertyIsEnumerable(key) && !(config[key] && config[key].length)) { delete config[key]; }
+    }
 
     try {
       await fs.outputFile(config.configFile, JSON.stringify(config, null, 2));
@@ -117,7 +132,7 @@ class Config {
   async editOne(setting, message) {
     const config = this;
     const prev = config[setting];
-    message = message || (_.capitalize(_.startCase(setting)) + ':')
+    message = message || _.capitalize(_.startCase(setting)) + ':';
     const new1 = await input(message, config[setting]);
     config[setting] = new1;
     if (new1 === prev) {

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import GitHubApi from 'github';
+import opn from 'opn';
 import request from 'client-request/promise';
 import resolveRedirect from 'resolve-redirect';
 import resolveGitUrl from 'github-url-from-git';
@@ -10,7 +11,7 @@ export default github;
 
 export async function decodeUrl(input) {
   if (!input) {
-    throw new Error(`Need a URL/packageName`);
+    throw new Error('Need a URL/packageName');
   } else if (input.match(/^[a-zA-Z0-9-_.]+$/)) {
     // just a package-name
     const packageName = input;
@@ -40,7 +41,7 @@ export async function getOwnerRepoFromGithubUrl(url) {
   const regexp = /github.com[\/\:](.*?)\/(.*?)(\/|$|\.git)/;
   const result = regexp.exec(url);
   if (!result || result.length < 4) {
-    throw new Error(`Couldn't extract owner/repo from url "${url}"`)
+    throw new Error(`Couldn't extract owner/repo from url "${url}"`);
   }
   const [, owner, repo] = result;
   return { owner, repo, url };
@@ -50,7 +51,7 @@ export function getPackageNameFromNpmUrl(url) {
   const regexp = /npmjs.com\/package\/([a-zA-Z0-9-_.]+)($|\/$)/;
   const result = regexp.exec(url);
   if (!result || result.length < 1) {
-    throw new Error(`Couldn't get package name from url "${url}"`)
+    throw new Error(`Couldn't get package name from url "${url}"`);
   }
   const [, packageName] = result;
   return packageName;
@@ -89,10 +90,16 @@ export async function fork({ owner, repo, user, attempt = 1, err }) {
   try {
     const { full_name } = await github.repos.fork({ user: owner, repo });
     if (full_name !== `${user}/${repo}`) {
-      throw new Error(`Couldn't fork`)
+      throw new Error('Couldn\'t fork');
     }
   } catch (err) {
-    return fork({ owner, repo, user, attempt: attempt + 1, err })
+    return fork({ owner, repo, user, attempt: attempt + 1, err });
   }
 
+}
+
+export async function openPr({ owner, repo, branch }) {
+  const url = `https://github.com/${owner}/${repo}/compare/${branch}`;
+  console.log(`Navigating to: ${url}`);
+  opn(url);
 }

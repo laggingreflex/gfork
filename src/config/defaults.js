@@ -4,9 +4,17 @@ function add(name, config) {
   defaults[name] = config;
 }
 
-add('rmRf', { type: 'boolean', alias: ['rm', 'R'] });
-add('nm', { type: 'boolean', alias: ['N'] });
-// add('forksDir', { type: 'boolean', alias: ['fd', 'F'] });
+add('command', { type: 'array', alias: ['c'] });
+add('rootDirCommand', { type: 'array', alias: ['rdc'] });
 
+add('rmRf', { type: 'boolean', alias: ['rm', 'R'] });
+add('nodeModules', { type: 'boolean', alias: ['N'] });
+
+add('check', { type: 'boolean' });
+
+add('pullRequest', { type: 'boolean', alias: ['L'] });
+add('fetchPr', { type: 'number', alias: ['H'] });
+
+add('noSavedConfig', { type: 'boolean', alias: ['X'] });
 
 export default defaults;

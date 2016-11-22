@@ -7,15 +7,8 @@ import {
   getTokenFromGitHub,
   authenticateWithToken,
 } from './utils/auth';
-import {
-  decodeUrl,
-  fork
-} from './utils/github';
-import {
-  clone,
-  addRemote,
-  setUser
-} from './utils/git';
+import * as git from './utils/git';
+import * as github from './utils/github';
 import { exec } from './utils/child-process';
 import {
   confirm,
@@ -46,6 +39,33 @@ export async function main() {
   if (config.editConfig) {
     await config.edit();
     process.exit(0);
+  }
+
+  if (config.check) {
+    return await git.readDir({
+      cwd: config.root,
+      src: config.remote,
+    });
+  }
+
+  if (config.pullRequest) {
+    const { remoteOrigin, remoteSrc, branch } = await git.readDir({
+      cwd: config.root,
+      src: config.remote,
+    });
+    const { owner, repo } = await github.decodeUrl(remoteSrc);
+    github.openPr({ owner, repo, branch });
+    return;
+  }
+
+  if (config.fetchPr) {
+    const { remoteSrc } = await git.readDir({
+      cwd: config.root,
+      src: config.remote,
+    });
+    const { owner, repo } = await github.decodeUrl(remoteSrc);
+    git.fetchPr({ owner, repo, src: config.remote, pr: config.fetchPr });
+    return;
   }
 
   let loginPromise;
@@ -90,8 +110,8 @@ export async function main() {
 }
 
 async function actual(input) {
-  const { owner, repo } = await decodeUrl(input);
-  await fork({ owner, repo, user: config.username });
+  const { owner, repo } = await github.decodeUrl(input);
+  await github.fork({ owner, repo, user: config.username });
   const forkedUrl = `git@github.com:${config.username}/${repo}.git`;
   const sourceUrl = `git@github.com:${owner}/${repo}.git`;
 
@@ -101,7 +121,7 @@ async function actual(input) {
     gitCloneCwd = join(cwd, '..');
     repoDir = basename(config.root);
     repoFullDir = cwd;
-    console.log(`Cloning here: ${repoDir}...` );
+    console.log(`Cloning here: ${repoDir}...`);
   } else if (config.forksDir) {
     cwd = config.forksDir;
     gitCloneCwd = config.forksDir;
@@ -116,10 +136,6 @@ async function actual(input) {
     console.log(`Cloning in: ./${repo}...`);
   }
 
-  // console.log({ repoFullDir });
-  // console.log({ gitCloneCwd });
-  // console.log({ repoDir });
-  // console.log({ cwd });
   await fs.ensureDir(repoFullDir);
   if (config.rmRf) {
     console.log(`Emptying dir: ${repoDir}...`);
@@ -138,19 +154,19 @@ async function actual(input) {
     }
   }
 
-  await clone({
+  await git.clone({
     url: forkedUrl,
     dir: repoDir,
     cwd: gitCloneCwd,
   });
 
-  await addRemote({
+  await git.addRemote({
     cwd: repoFullDir,
     name: config.remote,
     url: sourceUrl
   });
 
-  await setUser({
+  await git.setUser({
     cwd: repoFullDir,
     name: config.username,
     email: config.email
@@ -158,16 +174,14 @@ async function actual(input) {
 
   if (config.command) {
     console.log(`Executing command: \`${config.command}\` in '${basename(repoFullDir)}'`);
-    const [cmd, ...args] = config.command.split(/[\s]+/g);
-    await exec(cmd, args, {
+    await exec(config.command, {
       cwd: repoFullDir,
       env: { repo },
     });
   }
   if (config.rootDirCommand) {
     console.log(`Executing command: \`${config.rootDirCommand}\` in '${basename(config.root)}'`);
-    const [cmd, ...args] = config.rootDirCommand.split(/[\s]+/g);
-    await exec(cmd, args, {
+    await exec(config.rootDirCommand, {
       cwd: config.root,
       env: { repo },
     });

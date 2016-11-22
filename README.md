@@ -29,6 +29,16 @@ gfork [OPTIONS] [NPM library or GitHub project]
 -r, --remote        Remote name to use for original library (default "src")
 -d, --domain        Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
 ```
+```
+Examples:
+gfork express     # clones express in ./express
+gfork . express   # clones express in ./
+gfork -NR express # clones express in ./node_modules/express
+
+# inside cloned module (./express)
+gfork . -H 24     # pulls http://github.com/expressjs/express/pull/42 as #42 branch
+gfork . -L        # opens http://github.com/expressjs/express/compare/<current-branch>
+```
 
 ## Description
 
@@ -120,9 +130,26 @@ $ npm link express
 ./node_modules/express -> ~/.npm/node_modules/express -> ~/my-forks/express
 ```
 
-You don't have to type that long command every time,
-gfork can store these command configs so you can have this as your default action for all forks, and you **just** have to run `gfork express`.
-
+You don't have to type that long command every time, gfork can store these command configs so you can have this as your default action for all forks.
+```sh
+$ gfork --edit-config \
+    --forks-dir ~/my-forks \
+    --command="npm link" \
+    --root-dir-command="npm link $repo"
+Config saved successfully to file "~/.gfork"
+# now you can just run
+gfork express
+# and it'll run it with the saved config as options
+```
+You can still override saved config:
+```sh
+# passed arguments take precedence over saved config options
+$ gfork express -NR -c "npm i" --rdc ""
+# or to not use any saved config (except token):
+$ gfork express --no-saved-config  # alias: -X
+# which can also be combined with other config:
+$ gfork express -NRX
+```
 
 ## Setup
 
