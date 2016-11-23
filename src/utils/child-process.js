@@ -22,6 +22,7 @@ export async function exec(command, args, opts = {}) {
     opts = { stdio: 'inherit', ...opts };
   }
   opts = { encoding: 'utf8', ...opts };
+  opts = { shell: true, ...opts };
   if (opts.env) { opts.env = {...process.env, ...opts.env }; }
   args = args.filter(Boolean);
   let cp, promise, result, stdout, stderr;
