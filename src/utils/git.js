@@ -27,25 +27,30 @@ export async function setUser({ cwd, name, email }) {
   await exec('git', ['config', 'user.email', email], { cwd });
 }
 
+export function extractUrlFromGitRemote({ str, name, nameLabel, fetch }) {
+  try {
+    const match = str.match(`(?:^|[\\n\\r]|[\\\\n\\\\r])${name}[\\s\\t]+(.*) \\(${fetch ? 'fetch' : 'push'}\\)`);
+    if (!match) { throw new Error('Match not found'); }
+    return match[1];
+  } catch (err) {
+    err.message = `Couldn't get ${nameLabel || name}: ${err.message}`;
+    throw err;
+  }
+}
+
 export async function readDir({ cwd, src }) {
-  let remoteOrigin, remoteSrc, branch;
+  let remotes, remoteOrigin, remoteSrc, branch;
   console.log(`Reading dir "${path.basename(cwd)}"...`);
   const opts = { cwd, capture: true };
   try {
-    console.log('Getting origin...');
-    remoteOrigin = await exec('git remote get-url --push origin', opts);
-    if (!remoteOrigin) { throw new Error(''); }
-  } catch (error) {
-    error.message = `Couldn't get origin. ${error.message}`;
-    throw error;
-  }
-  try {
-    console.log(`Getting {src: ${src}}...`);
-    remoteSrc = await exec(`git remote get-url ${src}`, opts);
-    if (!remoteSrc) { throw new Error(''); }
-  } catch (error) {
-    error.message = `Couldn't get {src: ${src}}. ` + error.message;
-    throw error;
+    console.log('Getting remotes...');
+    remotes = await exec('git remote -v', opts);
+    if (!remotes) { throw new Error('Couldn\'t get `git remotes`'); }
+    remoteOrigin = extractUrlFromGitRemote({ str: remotes, name: 'origin' });
+    remoteSrc = extractUrlFromGitRemote({ str: remotes, name: 'src', nameLabel: `{src:${src}}`, fetch: true });
+  } catch (err) {
+    err.message = `Couldn't get remotes: ${err.message}`;
+    throw err;
   }
   try {
     console.log('Getting current branch...');
@@ -55,6 +60,7 @@ export async function readDir({ cwd, src }) {
     error.message = `Couldn't get current branch. ${error.message}`;
     throw error;
   }
+
   // console.log({ remoteOrigin, remoteSrc, branch });
   return { remoteOrigin, remoteSrc, branch };
 }
