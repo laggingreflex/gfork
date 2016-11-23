@@ -79,6 +79,9 @@ class Config {
     if (args.nodeModules || args.N) {
       config.forksDir = 'node_modules';
     }
+    if (config.forksDir && config.forksDir.charAt(0) === '~') {
+      config.forksDir = path.join(os.homedir(), config.forksDir.substr(1));
+    }
 
     config.rmRf = args.rmRf || args.rmrf || args.rm || args.R;
 

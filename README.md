@@ -102,7 +102,7 @@ Executing command: `npm install` in 'passport'...
 Instead of directly cloning inside your `./project/node_modules/…` dir, you should clone it in a separate dir and [**use `npm link`**][npm link] to link those projects into your current project's `node_modules`. It'll allow you to use the same forked module across different projects. You can specify the `--forks-dir` as any dir on your computer.
 
 ```sh
-$ gfork express --forks-dir /home/my-forks
+$ gfork express --forks-dir ~/my-forks
 ```
 
 
