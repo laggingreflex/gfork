@@ -201,7 +201,7 @@ done
 
 ## Details
 
-### Operation
+### Detailed operation
 
 gfork does 4 things when it clones a project:
 
@@ -234,35 +234,72 @@ gfork does 4 things when it clones a project:
     Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
 
 
+### Detailed Features
+
+#### Authentication
+
+Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.gfork`.
+
+#### Fork & clone
+
+It uses the [GitHub API][2] to fork, and uses local `git` to do the rest.
+
+#### Config
+
+Settings are saved in config file (`~/.gfork`) in JSON format. You can edit the settings directly or by running `gfork --edit-config`
+
 ### Detailed usage
 
 #### command
 
-Command to execute after cloning.
+`--command` runs in the project dir after cloning process exits cleanly (code 0).
 
-
-
-## Features
-
-### Authentication
-
-Your credentials are used for the first time to receive an authentication token and stored for future use in `~/.gfork`.
-
-### Fork & clone
-
-It uses the [GitHub API][2] to fork, and uses local `git` to do the rest.
-
-### Config
-
-Settings are saved in config file (`~/.gfork`) in JSON format. You can edit the settings directly or by running `gfork --edit-config`
-
-
-### Commands
-
-gfork gets you specify a `--command` to run in the project dir and a `--root-dir-command` to run in the root dir. The root-dir command is run after the command in the project dir completes and **only** if it exits cleanly.
+And a `--root-dir-command` runs in the root dir after the `--command` exits cleanly.
 
 In both commands the repo name is available as an environment variable: `$repo`
 
+#### here
+
+`--here` switch is used in cases where things need to be done in the current directory.
+
+This clones the module in current directory instead of in a sub-directory:
+```
+gfork <url> --here
+```
+is equivalent to:
+```
+git clone <url> .
+```
+
+It's also used (required) in `--pull-request` and `--fetch-pr` because you can only do those things when you inside a cloned project.
+
+A period `.` is a short alias for it:
+```
+gfork <url> --here
+# or
+gfork <url> .
+```
+
+#### pull request
+
+`--pull-request` is a handy shortcut to open the github URL to create a pull request from current branch of your forked repo against the original author's github repo. It requires you to be inside your cloned project dir and use `--here` switch.
+```
+cd express
+gfork . --pull-request
+```
+
+#### fetch pr
+
+`--fetch-pr` is another handy shortcut to fetch a pull-request from the original author's github repo and check it out locally. It requires you to be inside your cloned project dir and use `--here` switch.
+```
+gfork . --fetch-pr 42
+```
+It's equivalent to:
+```
+git fetch src pull/42/head:#42
+git checkout #42
+```
+Note that it automatically creates a new branch name `#` followed by the pull request ID, and also checks out that branch.
 
 ## Issues
 
@@ -280,7 +317,6 @@ Try changing the `token-note`
 ```sh
 $ gfork --edit-config --token-note "Some random new token note"
 ```
-
 
 
 [1]: https://help.github.com/articles/checking-out-pull-requests-locally/
