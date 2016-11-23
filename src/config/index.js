@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs-promise';
 import yargs from 'yargs';
 import _ from 'lodash';
+import isEmpty from 'is-empty';
 import { input } from '../utils/prompt';
 import { hiddenProp } from '../utils/object';
 import { printHelp } from '../utils/help';
@@ -160,7 +161,8 @@ class Config {
     const config = this;
 
     if (config.editConfig) {
-      const passedArgs = Object.keys(config.args).filter(arg => Object.keys(config).includes(arg));
+      const passedArgs = Object.keys(config.args).filter(arg =>
+        !isEmpty(config.args[arg]) && Object.keys(config).includes(arg));
       if (passedArgs.length) {
         await Promise.all(passedArgs.map(::config.editOne));
         await config.saveToFile();
