@@ -16,12 +16,12 @@ npm install -g gfork
 gfork [OPTIONS] [NPM library or GitHub project]
 ```
 ```
--c, --command               Command to execute after cloning. Inside repo dir with $repo variable name.
--F, --forks-dir             Directory to put new forks in.
---rdc, --root-dir-command   Command to execute in root-dir after --command exits cleanly.
+-c, --command               Command to execute after cloning inside the repo dir.
 -R, --rm-rf                 Remove everything in target dir before cloning.
+-F, --forks-dir             Directory to put new forks (create subdirs for repo) in . Default: ./
 -N, --node-modules          Shortcut for --forks-dir="./node_modules".
---here, .                   Do stuff (clone) in current directory. (alias: .)
+--cc, --current-dir-command Command to execute in current dir after --command exits cleanly.
+., --here                   Do stuff directly in current-dir, like clone etc.. (alias: .)
 -L, --pull-request          Create a pull request from current branch. (opens default browser) (requires --here)
 -H, --fetch-pr              Fetch a PR from src. (shortcut to: git fetch src pull/42/head:#42) (requires --here)
 -t, --token                 Specify token manually (otherwise auto-retrieved)
@@ -33,6 +33,8 @@ gfork [OPTIONS] [NPM library or GitHub project]
 -d, --domain                Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
 --url-type                  Github URL type to use when cloning ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
 --http                      Shortcut for --url-type=https. Use this if you haven't set up your SSH public key in github: https://help.github.com/articles/generating-an-ssh-key/
+-e, --edit-config           Edit config. Either edit all config, or when used with other arguments just edit those.
+-X, --no-saved-config       Don't use any saved config, except token.
 ```
 ```
 Examples:
@@ -172,6 +174,16 @@ $ gfork --edit-config --token YOUR_ACCESS_TOKEN
 ? Token: YOUR_ACCESS_TOKEN
 Config saved successfully to file "~/.gfork"
 ```
+
+Also, by default it uses git urls (`git@github.com/….git`) which require you set up your SSH public key set up with Github ([more info][ssh-key]).
+
+Or you can instead choose to use [https oauth urls][https-oauth] (`https://<your-token>@github.com/….git`) by setting the `--url-type=https` (or `--https`)
+
+[ssh-key]: https://help.github.com/articles/generating-an-ssh-key/
+[https-oauth]: https://github.com/blog/1270-easier-builds-and-deployments-using-git-over-https-and-oauth
+
+Settings are stored as plain JSON in `~/.gfork` and you can edit or save new settings with: `gfork --edit-config` (or just `-e`). Stored settings are applied on every use, except in the case you wish to over-ride them; passed arguments always take precedence over any saved config of the same name, or you can use the `--no-saved-config` (alias: `-X`) in which case no saved setting (except token) are applied.
+
 
 ### Subsequent use
 

@@ -11,7 +11,7 @@ export function printHelp(exit) {
       --rdc, --root-dir-command   Command to execute in root-dir after --command exits cleanly.
       -R, --rm-rf                 Remove everything in target dir before cloning.
       -N, --node-modules          Shortcut for --forks-dir="./node_modules".
-      --here, .                   Do stuff (clone) in current directory. (alias: .)
+      ., --here                   Do stuff in current directory, like clone etc. (alias: .)
       -L, --pull-request          Create a pull request from current branch. (opens default browser) (requires --here)
       -H, --fetch-pr              Fetch a PR from src. (shortcut to: git fetch src pull/42/head:#42) (requires --here)
       -t, --token                 Specify token manually (otherwise auto-retrieved)
@@ -23,6 +23,8 @@ export function printHelp(exit) {
       -d, --domain                Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
       --url-type                  Github URL type ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
       --http                      Shortcut for --url-type=https
+      -e, --edit-config           Edit config. Either edit all config, or when used with other arguments just edit those.
+      -X, --no-saved-config       Don't use any saved config, except token.
 
     Examples:
       gfork express     # clones express in ./express
