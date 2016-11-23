@@ -112,7 +112,9 @@ class Config {
     }
 
     config.command = args.command || args.cmd || args.c || !config.noSavedConfig && config.command;
+    if (config.command instanceof Array) { config.command = config.command.join(' '); }
     config.rootDirCommand = args.rootDirCommand || args.rdc || !config.noSavedConfig && config.rootDirCommand;
+    if (config.rootDirCommand instanceof Array) { config.rootDirCommand = config.rootDirCommand.join(' '); }
 
     config.pullRequest = args.pullRequest || args.L;
     config.fetchPr = args.fetchPr || args.H;
@@ -164,10 +166,11 @@ class Config {
     const config = this;
 
     if (config.editConfig) {
-      const passedArgs = Object.keys(config.args).filter(arg =>
-        !isEmpty(config.args[arg]) && Object.keys(config).includes(arg));
+      const passedArgs = Object.keys(config.args).filter(arg => !isEmpty(config.args[arg]) && Object.keys(config).includes(arg));
       if (passedArgs.length) {
-        await Promise.all(passedArgs.map(::config.editOne));
+        for (const arg of passedArgs) {
+          await config.editOne(arg); // eslint-disable-line
+        }
         await config.saveToFile();
         return;
       }
@@ -176,10 +179,19 @@ class Config {
     if (!config.token && !await this.editOne('tokenNote')) {
       await this.editOne('token');
     }
-    await this.editOne('command', 'Command to run in forksDir after cloning:');
-    await this.editOne('forksDir', 'Directory to put new forks in:');
+    if (config.forksDir) {
+      await this.editOne('forksDir', 'Directory to put new forks in:');
+      await this.editOne('command', 'Command to run in forksDir after cloning:');
+    } else {
+      await this.editOne('command', 'Command to run after cloning:');
+      await this.editOne('forksDir', 'Directory to put new forks in:');
+    }
     if (config.command) {
-      await this.editOne('rootDirCommand', 'Command to run in rootDir after forksDir command:');
+      if (config.forksDir) {
+        await this.editOne('rootDirCommand', 'Command to run in rootDir after forksDir command:');
+      } else {
+        await this.editOne('rootDirCommand', 'Command to run in rootDir:');
+      }
     }
     // await this.editOne('tokenNote', 'Token note:');
     await this.editOne('remote', 'Name for original remote:');

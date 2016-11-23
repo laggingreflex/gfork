@@ -1,4 +1,4 @@
-import Enquirer  from 'enquirer';
+import Enquirer from 'enquirer';
 import Confirm from 'prompt-confirm';
 import Password from 'prompt-password';
 
