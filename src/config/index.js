@@ -173,22 +173,13 @@ class Config {
       }
     }
 
-    if (!config.token) {
-      if (!await this.editOne('tokenNote')) {
-        await this.editOne('token');
-      }
+    if (!config.token && !await this.editOne('tokenNote')) {
+      await this.editOne('token');
     }
-    if (config.forksDir) {
-      await this.editOne('forksDir', 'Directory to put new forks in:');
-      if (config.command) {
-        await this.editOne('rootDirCommand', 'Command to run in rootDir after cloning:');
-      }
-    } else {
-      await this.editOne('command', 'Command to run after cloning:');
-      await this.editOne('forksDir', 'Directory to put new forks in:');
-      if (config.forksDir) {
-        await this.editOne('rootDirCommand', 'Command to run in rootDir after cloning:');
-      }
+    await this.editOne('command', 'Command to run in forksDir after cloning:');
+    await this.editOne('forksDir', 'Directory to put new forks in:');
+    if (config.command) {
+      await this.editOne('rootDirCommand', 'Command to run in rootDir after forksDir command:');
     }
     // await this.editOne('tokenNote', 'Token note:');
     await this.editOne('remote', 'Name for original remote:');
