@@ -16,18 +16,23 @@ npm install -g gfork
 gfork [OPTIONS] [NPM library or GitHub project]
 ```
 ```
--c, --command       Command to execute after cloning. Inside repo dir with $repo variable name.
--F, --forks-dir     Directory to put new forks in.
---root-dir-command  Command to execute in root-dir after --command exits cleanly.
--R, --rm-rf         Remove everything in target dir before cloning.
--N, --nm            Shortcut for --forks-dir="./node_modules"
--t, --token         Specify token manually (otherwise auto-retrieved)
--n, --token-note    Note to use when getting token (default "Tokek for gfork").
--f, --config-file   File to save config and token for future (default ~/.gfork)
--u, --username      Your GitHub username (only 1st time) [optional: prompted if necessary]
--p, --password      Your GitHub password (only 1st time) [optional: prompted if necessary]
--r, --remote        Remote name to use for original library (default "src")
--d, --domain        Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
+-c, --command               Command to execute after cloning. Inside repo dir with $repo variable name.
+-F, --forks-dir             Directory to put new forks in.
+--rdc, --root-dir-command   Command to execute in root-dir after --command exits cleanly.
+-R, --rm-rf                 Remove everything in target dir before cloning.
+-N, --node-modules          Shortcut for --forks-dir="./node_modules".
+--here, .                   Do stuff (clone) in current directory. (alias: .)
+-L, --pull-request          Create a pull request from current branch. (opens default browser) (requires --here)
+-H, --fetch-pr              Fetch a PR from src. (shortcut to: git fetch src pull/42/head:#42) (requires --here)
+-t, --token                 Specify token manually (otherwise auto-retrieved)
+-n, --token-note            Note to use when getting token (default "Tokek for gfork").
+-f, --config-file           File to save config and token for future (default ~/.gfork)
+-u, --username              Your GitHub username (only 1st time) [optional: prompted if necessary]
+-p, --password              Your GitHub password (only 1st time) [optional: prompted if necessary]
+-r, --remote                Remote name to use for original library (default "src")
+-d, --domain                Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
+--url-type                  Github URL type to use when cloning ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
+--http                      Shortcut for --url-type=https. Use this if you haven't set up your SSH public key in github: https://help.github.com/articles/generating-an-ssh-key/
 ```
 ```
 Examples:
@@ -50,20 +55,16 @@ $ gfork express
 Forking expressjs/express...
 Cloning into 'express'...
 ```
-
 gfork finds the github repository of the npm module and forks it under your account and clones your forked repo.
 
 You can also specify the github project directly:
-
 ```sh
 $ gfork https://github.com/expressjs/express
 # or just username/lib combo
 $ gfork expressjs/express
 ```
 
-
 By default it will clone it in `current-dir/express`, but you can have it remove your `./node_modules/express` and clone it there instead (just like `npm install` would have):
-
 ```sh
 $ gfork express --forks-dir node_modules --rm-rf
 # or
@@ -231,6 +232,15 @@ gfork does 4 things when it clones a project:
     ```
 
     Notice that it also makes available an environment variable "`repo`" which holds the name of the project that was being cloned.
+
+
+### Detailed usage
+
+#### command
+
+Command to execute after cloning.
+
+
 
 ## Features
 

@@ -16,19 +16,40 @@ export async function decodeUrl(input) {
     // just a package-name
     const packageName = input;
     const githubUrl = await geGithubUrlFromNpmPackageName(packageName);
-    return await getOwnerRepoFromGithubUrl(githubUrl);
+    const { owner, repo } = await getOwnerRepoFromGithubUrl(githubUrl);
+    if (repo !== input) {
+      // package-name provided differs from the one gotten from redirected github project name
+      return { owner, repo, originalRepoName: input };
+    }
+    return { owner, repo };
   } else if (input.match(/^[a-zA-Z0-9-_.]+\/[a-zA-Z0-9-_.]+$/)) {
     // owner/package-name
-    return await getOwnerRepoFromGithubUrl('https://github.com/' + input);
+    const { owner, repo } = await getOwnerRepoFromGithubUrl('https://github.com/' + input);
+    return { owner, repo };
   } else if (input.match(/npmjs.com/)) {
     // npm URL
     const packageName = getPackageNameFromNpmUrl(input);
     const githubUrl = await geGithubUrlFromNpmPackageName(input);
-    return await getOwnerRepoFromGithubUrl(githubUrl);
+    const { owner, repo } = await getOwnerRepoFromGithubUrl(githubUrl);
+    return { owner, repo };
   } else {
     // assume github URL
-    return await getOwnerRepoFromGithubUrl(input);
+    const { owner, repo } = await getOwnerRepoFromGithubUrl(input);
+    return { owner, repo };
   }
+}
+
+export async function generateUrl({ https, token, domain = 'github.com', user, owner, repo } = {}) {
+  let forkedUrl, sourceUrl;
+  if (https) {
+    if (!token) { throw new Error('Need a token for https URL'); }
+    forkedUrl = `https://${token}:x-oauth-basic@github.com/${user}/${repo}.git`;
+    sourceUrl = `https://${token}:x-oauth-basic@github.com/${owner}/${repo}.git`;
+  } else {
+    forkedUrl = `git@${domain}:${user}/${repo}.git`;
+    sourceUrl = `git@${domain}:${owner}/${repo}.git`;
+  }
+  return { forkedUrl, sourceUrl };
 }
 
 export async function getOwnerRepoFromGithubUrl(url) {
@@ -76,7 +97,6 @@ export async function geGithubUrlFromNpmPackageName(packageName) {
   }
   return url;
 }
-
 
 export async function fork({ owner, repo, user, attempt = 1, err }) {
   if (attempt <= 1) {

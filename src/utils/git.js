@@ -4,7 +4,14 @@ import { exec } from './child-process';
 import { confirm } from './prompt';
 
 export async function clone({ dir, url, cwd }) {
-  await exec('git', ['clone', url, dir], { cwd });
+  try {
+    await exec('git', ['clone', url, dir], { cwd });
+  } catch (err) {
+    if (err.message.match(128)) {
+      err.message += `\nIf you're getting "Permission denied (publickey)" error, you probably need set up an SSH key with Github (more info: https://help.github.com/articles/generating-an-ssh-key). Or try setting --url-type=https (or --https) to use 'https://<token>@github.com/...' style git URLs.`;
+    }
+    throw err;
+  }
 }
 
 export async function addRemote({ cwd, name = 'src', url }) {
@@ -48,7 +55,7 @@ export async function readDir({ cwd, src }) {
     error.message = `Couldn't get current branch. ${error.message}`;
     throw error;
   }
-  console.log({ remoteOrigin, remoteSrc, branch });
+  // console.log({ remoteOrigin, remoteSrc, branch });
   return { remoteOrigin, remoteSrc, branch };
 }
 

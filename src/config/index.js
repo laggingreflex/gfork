@@ -33,6 +33,7 @@ class Config {
     hiddenProp(config, 'editConfig');
     hiddenProp(config, 'noSavedConfig');
     hiddenProp(config, 'loggedIn');
+    hiddenProp(config, 'https');
 
     config.args = args;
 
@@ -94,6 +95,17 @@ class Config {
 
     config.remote = args.remote || args.r || !config.noSavedConfig && config.remote || 'src';
     config.domain = args.domain || args.d || !config.noSavedConfig && config.domain || 'github.com';
+    config.https = args.https;
+    config.urlType = args.urlType || !config.noSavedConfig && config.urlType;
+    if (config.urlType) {
+      if (config.urlType.match(/^https?$/)) {
+        config.https = true;
+      } else if (config.https) {
+        throw new Error(`{urlType: ${config.urlType}} incompatible with {https: ${config.https}}`);
+      } else {
+        config.https = false;
+      }
+    }
 
     config.command = args.command || args.cmd || args.c || !config.noSavedConfig && config.command;
     config.rootDirCommand = args.rootDirCommand || args.rdc || !config.noSavedConfig && config.rootDirCommand;
@@ -176,6 +188,7 @@ class Config {
     // await this.editOne('tokenNote', 'Token note:');
     await this.editOne('remote', 'Name for original remote:');
     await this.editOne('domain', 'Domain name:');
+    await this.editOne('urlType', 'Github URL type:');
     // await this.editOne('username', 'Your username:');
 
     await config.saveToFile();

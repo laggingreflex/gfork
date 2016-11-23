@@ -42,10 +42,10 @@ export async function main() {
   }
 
   if (config.check) {
-    return await git.readDir({
+    return console.log(await git.readDir({
       cwd: config.root,
       src: config.remote,
-    });
+    }));
   }
 
   if (config.pullRequest) {
@@ -110,11 +110,16 @@ export async function main() {
 }
 
 async function actual(input) {
-  const { owner, repo } = await github.decodeUrl(input);
+  const { owner, repo, originalRepoName } = await github.decodeUrl(input);
   await github.fork({ owner, repo, user: config.username });
-  const forkedUrl = `git@github.com:${config.username}/${repo}.git`;
-  const sourceUrl = `git@github.com:${owner}/${repo}.git`;
-
+  const { forkedUrl, sourceUrl } = await github.generateUrl({
+    https: config.https,
+    token: config.token,
+    domain: config.domain,
+    user: config.username,
+    owner,
+    repo,
+  });
   let cwd, gitCloneCwd, repoDir, repoFullDir, rootDirBasename;
   if (config.here) {
     cwd = config.root;
@@ -125,15 +130,15 @@ async function actual(input) {
   } else if (config.forksDir) {
     cwd = config.forksDir;
     gitCloneCwd = config.forksDir;
-    repoDir = repo;
+    repoDir = originalRepoName || repo;
     repoFullDir = join(cwd, repoDir);
-    console.log(`Cloning in forksDir: .../${basename(cwd)}/${repo}...`);
+    console.log(`Cloning in forksDir: .../${basename(cwd)}/${basename(repoDir)}...`);
   } else {
     cwd = config.root;
     gitCloneCwd = config.root;
-    repoDir = repo;
+    repoDir = originalRepoName || repo;
     repoFullDir = join(cwd, repoDir);
-    console.log(`Cloning in: ./${repo}...`);
+    console.log(`Cloning in: ./${basename(repoDir)}...`);
   }
 
   await fs.ensureDir(repoFullDir);

@@ -21,6 +21,8 @@ export function printHelp(exit) {
       -p, --password              Your GitHub password (only 1st time) [optional: prompted if necessary]
       -r, --remote                Remote name to use for original library (default "src")
       -d, --domain                Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
+      --url-type                  Github URL type ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
+      --http                      Shortcut for --url-type=https
 
     Examples:
       gfork express     # clones express in ./express
