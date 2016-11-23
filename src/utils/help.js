@@ -6,12 +6,12 @@ export function printHelp(exit) {
 
     Usage: gfork [OPTIONS] [NPM library or GitHub project] [.]
 
-      -c, --command               Command to execute after cloning. Inside repo dir with $repo variable name.
-      -F, --forks-dir             Directory to put new forks in.
-      --rdc, --root-dir-command   Command to execute in root-dir after --command exits cleanly.
+      -c, --command               Command to execute after cloning inside the repo dir.
       -R, --rm-rf                 Remove everything in target dir before cloning.
+      -F, --forks-dir             Directory to put new forks (create subdirs for repo) in. Default: ./
       -N, --node-modules          Shortcut for --forks-dir="./node_modules".
-      ., --here                   Do stuff in current directory, like clone etc. (alias: .)
+      --cc, --current-dir-command Command to execute in current dir after --command exits cleanly.
+      ., --here                   Do stuff directly in current-dir, like clone etc.. (alias: .)
       -L, --pull-request          Create a pull request from current branch. (opens default browser) (requires --here)
       -H, --fetch-pr              Fetch a PR from src. (shortcut to: git fetch src pull/42/head:#42) (requires --here)
       -t, --token                 Specify token manually (otherwise auto-retrieved)
@@ -21,8 +21,8 @@ export function printHelp(exit) {
       -p, --password              Your GitHub password (only 1st time) [optional: prompted if necessary]
       -r, --remote                Remote name to use for original library (default "src")
       -d, --domain                Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
-      --url-type                  Github URL type ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
-      --http                      Shortcut for --url-type=https
+      --url-type                  Github URL type to use when cloning ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
+      --http                      Shortcut for --url-type=https. Use this if you haven't set up your SSH public key in github: https://help.github.com/articles/generating-an-ssh-key/
       -e, --edit-config           Edit config. Either edit all config, or when used with other arguments just edit those.
       -X, --no-saved-config       Don't use any saved config, except token.
 

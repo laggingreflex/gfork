@@ -18,7 +18,7 @@ gfork [OPTIONS] [NPM library or GitHub project]
 ```
 -c, --command               Command to execute after cloning inside the repo dir.
 -R, --rm-rf                 Remove everything in target dir before cloning.
--F, --forks-dir             Directory to put new forks (create subdirs for repo) in . Default: ./
+-F, --forks-dir             Directory to put new forks (create subdirs for repo) in. Default: ./
 -N, --node-modules          Shortcut for --forks-dir="./node_modules".
 --cc, --current-dir-command Command to execute in current dir after --command exits cleanly.
 ., --here                   Do stuff directly in current-dir, like clone etc.. (alias: .)
@@ -106,17 +106,15 @@ Instead of directly cloning inside your `./project/node_modules/…` dir, you sh
 ```sh
 $ gfork express --forks-dir ~/my-forks
 ```
+<sup>PS: `~` expands to homedir for Windows users as well.</sup>
 
-
-You can also specify an alternative `--root-dir-command` that's executed in your current dir after the regular `--command` is finished in the respective repo in `--forks-dir`.
-
-So you can clone/fork a module in your forks dir and have it linked to your current project's node_modules:
+Together with `--command` and `--current-dir-command` you can clone/fork a module in your forks dir and have it linked to your current project's node_modules:
 
 ```sh
 $ gfork express \
     --forks-dir ~/my-forks \
     --command="npm link" \
-    --root-dir-command="npm link $repo"
+    --current-dir-command="npm link \$repo"
 ```
 this is the equivalent of doing:
 ```sh
@@ -138,7 +136,7 @@ You don't have to type that long command every time, gfork can store these comma
 $ gfork --edit-config \
     --forks-dir ~/my-forks \
     --command="npm link" \
-    --root-dir-command="npm link $repo"
+    --current-dir-command="npm link \$repo"
 Config saved successfully to file "~/.gfork"
 # now you can just run
 gfork express
@@ -147,12 +145,14 @@ gfork express
 You can still override saved config:
 ```sh
 # passed arguments take precedence over saved config options
-$ gfork express -NR -c "npm i" --rdc ""
+$ gfork express -NR -c "npm i" --cc ""
 # or to not use any saved config (except token):
 $ gfork express --no-saved-config  # alias: -X
 # which can also be combined with other config:
 $ gfork express -NRX
 ```
+
+Caveat: A downside to this approach is that you'll be (re-)installing the said module's dependencies (and devDependencies\*) in its own dir again (npm link does all that). But then you may also be better able to hack on the module by being able to run its tests etc. which probably wouldn't work without its dependencies. \*To install devDependencies you may need to set your environment variable `NODE_ENV=development`.
 
 ## Setup
 
@@ -266,9 +266,11 @@ Settings are saved in config file (`~/.gfork`) in JSON format. You can edit the 
 
 `--command` runs in the project dir after cloning process exits cleanly (code 0).
 
-And a `--root-dir-command` runs in the root dir after the `--command` exits cleanly.
+And a `--current-dir-command` runs in the root dir after the `--command` exits cleanly.
 
-In both commands the repo name is available as an environment variable: `$repo`
+In both commands the repo name is available as an environment variable: `$repo`.
+
+PS: Use a backslash to escape the `\$repo` when passing it as an argument to gfork on the command line, otherwise it'll expand (to empty var most likely). Or use the `--edit-config` inquiry prompt where you may enter it without escaping.
 
 #### here
 
