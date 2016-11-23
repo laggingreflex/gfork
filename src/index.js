@@ -184,9 +184,9 @@ async function actual(input) {
       env: { repo },
     });
   }
-  if (config.rootDirCommand) {
-    console.log(`Executing command: \`${config.rootDirCommand}\` in '${basename(config.root)}'`);
-    await exec(config.rootDirCommand, {
+  if (config.currentDirCommand) {
+    console.log(`Executing command: \`${config.currentDirCommand}\` in '${basename(config.root)}'`);
+    await exec(config.currentDirCommand, {
       cwd: config.root,
       env: { repo },
     });

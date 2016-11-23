@@ -52,6 +52,7 @@ class Config {
         Object.assign(config, config.configFileContents);
       } catch (error) {
         config.configFileNotExistsFlag = true;
+
         // throw new Error(`Couldn't read config file: "${config.configFile}" ` + error.message);
         // console.error(`Couldn't read config file: "${config.configFile}"`);
       }
@@ -113,8 +114,8 @@ class Config {
 
     config.command = args.command || args.cmd || args.c || !config.noSavedConfig && config.command;
     if (config.command instanceof Array) { config.command = config.command.join(' '); }
-    config.rootDirCommand = args.rootDirCommand || args.rdc || !config.noSavedConfig && config.rootDirCommand;
-    if (config.rootDirCommand instanceof Array) { config.rootDirCommand = config.rootDirCommand.join(' '); }
+    config.currentDirCommand = args.currentDirCommand || args.rdc || !config.noSavedConfig && config.currentDirCommand;
+    if (config.currentDirCommand instanceof Array) { config.currentDirCommand = config.currentDirCommand.join(' '); }
 
     config.pullRequest = args.pullRequest || args.L;
     config.fetchPr = args.fetchPr || args.H;
@@ -188,15 +189,17 @@ class Config {
     }
     if (config.command) {
       if (config.forksDir) {
-        await this.editOne('rootDirCommand', 'Command to run in rootDir after forksDir command:');
+        await this.editOne('currentDirCommand', 'Command to run in current dir after forksDir command:');
       } else {
-        await this.editOne('rootDirCommand', 'Command to run in rootDir:');
+        await this.editOne('currentDirCommand', 'Command to run in current dir:');
       }
     }
+
     // await this.editOne('tokenNote', 'Token note:');
     await this.editOne('remote', 'Name for original remote:');
     await this.editOne('domain', 'Domain name:');
     await this.editOne('urlType', 'Github URL type:');
+
     // await this.editOne('username', 'Your username:');
 
     await config.saveToFile();

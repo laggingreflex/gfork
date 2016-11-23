@@ -5,7 +5,7 @@ function add(name, config) {
 }
 
 add('command', { type: 'array', alias: ['c'] });
-add('rootDirCommand', { type: 'array', alias: ['rdc'] });
+add('currentDirCommand', { type: 'array', alias: ['cc'] });
 
 add('rmRf', { type: 'boolean', alias: ['rm', 'R'] });
 add('nodeModules', { type: 'boolean', alias: ['N'] });
