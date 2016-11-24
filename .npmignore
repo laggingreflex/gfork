@@ -1,0 +1,14 @@
+
+.*
+*.*gz
+node_modules
+*node_modules*
+tests
+tests-coverage
+**/*.test.*
+jest.json
+dist/**/*.map
+yarn.lock
+src
+sh
+.npmignore
