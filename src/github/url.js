@@ -1,13 +1,7 @@
 import _ from 'lodash';
-import GitHubApi from 'github';
-import opn from 'opn';
 import request from 'client-request/promise';
 import resolveRedirect from 'resolve-redirect';
 import resolveGitUrl from 'github-url-from-git';
-
-const github = new GitHubApi({});
-
-export default github;
 
 export async function decodeUrl(input) {
   if (!input) {
@@ -96,30 +90,4 @@ export async function geGithubUrlFromNpmPackageName(packageName) {
     url = resolveGitUrl(url);
   }
   return url;
-}
-
-export async function fork({ owner, repo, user, attempt = 1, err }) {
-  if (attempt <= 1) {
-    console.log(`Forking ${owner}/${repo}...`);
-  } else if (attempt <= 3) {
-    console.error(repo, err.message);
-    console.log(`Forking ${owner}/${repo}... (attempt: ${attempt})`);
-  } else {
-    throw err;
-  }
-  try {
-    const { full_name } = await github.repos.fork({ user: owner, repo });
-    if (full_name !== `${user}/${repo}`) {
-      throw new Error('Couldn\'t fork');
-    }
-  } catch (err) {
-    return fork({ owner, repo, user, attempt: attempt + 1, err });
-  }
-
-}
-
-export async function openPr({ owner, repo, branch }) {
-  const url = `https://github.com/${owner}/${repo}/compare/${branch}`;
-  console.log(`Navigating to: ${url}`);
-  opn(url);
 }

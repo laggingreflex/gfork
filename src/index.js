@@ -1,28 +1,18 @@
 import 'source-map-support/register';
-import { join, basename } from 'path';
+import path from 'path';
 import fs from 'fs-promise';
-import handleErrors from './utils/errors';
 import config from './config';
-import {
-  getTokenFromGitHub,
-  authenticateWithToken,
-} from './utils/auth';
-import * as git from './utils/git';
-import * as github from './utils/github';
-import { exec } from './utils/child-process';
-import {
-  confirm,
-  input,
-  password,
-} from './utils/prompt';
+import * as git from './git';
+import * as github from './github';
+import { prompt, cp, errors } from './utils';
 
 async function login({ silent = false } = {}) {
   if (!config.token) {
-    config.username = await input('Enter your username:', config.username);
-    config.password = await password('Enter your password:');
-    config.token = await getTokenFromGitHub(config);
+    config.username = await prompt.input('Enter your username:', config.username);
+    config.password = await prompt.password('Enter your password:');
+    config.token = await github.auth.getTokenFromGitHub(config);
   }
-  const { user, email } = await authenticateWithToken({ token: config.token, silent });
+  const { user, email } = await github.auth.authenticateWithToken({ token: config.token, silent });
   config.username = user;
   config.email = email;
   silent || console.log(`Welcome, ${user} <${email}>`);
@@ -53,8 +43,8 @@ export async function main() {
       cwd: config.root,
       src: config.remote,
     });
-    const { owner, repo } = await github.decodeUrl(remoteSrc);
-    github.openPr({ owner, repo, branch });
+    const { owner, repo } = await github.url.decodeUrl(remoteSrc);
+    github.repo.openPr({ owner, repo, branch });
     return;
   }
 
@@ -63,7 +53,7 @@ export async function main() {
       cwd: config.root,
       src: config.remote,
     });
-    const { owner, repo } = await github.decodeUrl(remoteSrc);
+    const { owner, repo } = await github.url.decodeUrl(remoteSrc);
     git.fetchPr({ owner, repo, src: config.remote, pr: config.fetchPr });
     return;
   }
@@ -76,12 +66,12 @@ export async function main() {
     await login();
   } else {
     console.log('Couldn\'t find a valid GitHub token in the config file.');
-    if (await confirm('Login again?', true)) {
+    if (await prompt.confirm('Login again?', true)) {
       await login();
-    } else if (await confirm('Edit the token-note used to get the token?', true)) {
+    } else if (await prompt.confirm('Edit the token-note used to get the token?', true)) {
       await config.editOne('tokenNote');
       await login();
-    } else if (await confirm('Enter token manually?', true)) {
+    } else if (await prompt.confirm('Enter token manually?', true)) {
       await config.editOne('token');
       await login();
     } else {
@@ -90,10 +80,10 @@ export async function main() {
   }
 
   if (!config.urls.length) {
-    if (await confirm('Fork/Clone an npm package/GitHub URL?', true)) {
-      const url = await input('Please enter the package name/URL to clone: ');
+    if (await prompt.confirm('Fork/Clone an npm package/GitHub URL?', true)) {
+      const url = await prompt.input('Please enter the package name/URL to clone:');
       config.urls = [url];
-    } else if (!config.editConfig && await confirm('Edit the config?', true)) {
+    } else if (!config.editConfig && await prompt.confirm('Edit the config?', true)) {
       await editConfig();
       process.exit(0);
     } else {
@@ -110,9 +100,9 @@ export async function main() {
 }
 
 async function actual(input) {
-  const { owner, repo, originalRepoName } = await github.decodeUrl(input);
-  await github.fork({ owner, repo, user: config.username });
-  const { forkedUrl, sourceUrl } = await github.generateUrl({
+  const { owner, repo, originalRepoName } = await github.url.decodeUrl(input);
+  await github.repo.fork({ owner, repo, user: config.username });
+  const { forkedUrl, sourceUrl } = await github.url.generateUrl({
     https: config.https,
     token: config.token,
     domain: config.domain,
@@ -123,22 +113,22 @@ async function actual(input) {
   let cwd, gitCloneCwd, repoDir, repoFullDir, rootDirBasename;
   if (config.here) {
     cwd = config.root;
-    gitCloneCwd = join(cwd, '..');
-    repoDir = basename(config.root);
+    gitCloneCwd = path.join(cwd, '..');
+    repoDir = path.basename(config.root);
     repoFullDir = cwd;
     console.log(`Cloning here: ${repoDir}...`);
   } else if (config.forksDir) {
     cwd = config.forksDir;
     gitCloneCwd = config.forksDir;
     repoDir = originalRepoName || repo;
-    repoFullDir = join(cwd, repoDir);
-    console.log(`Cloning in forksDir: .../${basename(cwd)}/${basename(repoDir)}...`);
+    repoFullDir = path.join(cwd, repoDir);
+    console.log(`Cloning in forksDir: .../${path.basename(cwd)}/${path.basename(repoDir)}...`);
   } else {
     cwd = config.root;
     gitCloneCwd = config.root;
     repoDir = originalRepoName || repo;
-    repoFullDir = join(cwd, repoDir);
-    console.log(`Cloning in: ./${basename(repoDir)}...`);
+    repoFullDir = path.join(cwd, repoDir);
+    console.log(`Cloning in: ./${path.basename(repoDir)}...`);
   }
 
   await fs.ensureDir(repoFullDir);
@@ -150,7 +140,7 @@ async function actual(input) {
     try { nonEmpty = (await fs.readdir(repoFullDir)).length; } catch (noop) {}
     if (nonEmpty) {
       console.warn('Non-empty directory:', repoFullDir);
-      if (await confirm('Delete everything from it?')) {
+      if (await prompt.confirm('Delete everything from it?')) {
         console.log(`Emptying dir: ${repoDir}...`);
         await fs.emptydir(repoFullDir);
       } else {
@@ -178,19 +168,19 @@ async function actual(input) {
   });
 
   if (config.command) {
-    console.log(`Executing command: \`${config.command}\` in '${basename(repoFullDir)}'`);
-    await exec(config.command, {
+    console.log(`Executing command: \`${config.command}\` in '${path.basename(repoFullDir)}'`);
+    await cp.exec(config.command, {
       cwd: repoFullDir,
       env: { repo },
     });
   }
   if (config.currentDirCommand) {
-    console.log(`Executing command: \`${config.currentDirCommand}\` in '${basename(config.root)}'`);
-    await exec(config.currentDirCommand, {
+    console.log(`Executing command: \`${config.currentDirCommand}\` in '${path.basename(config.root)}'`);
+    await cp.exec(config.currentDirCommand, {
       cwd: config.root,
       env: { repo },
     });
   }
 }
 
-main().catch(handleErrors);
+main().catch(errors.handleErrors);

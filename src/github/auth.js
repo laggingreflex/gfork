@@ -1,33 +1,39 @@
-import github from './github';
+import api from './api';
 
 export async function getTokenFromGitHub({
   username,
   password,
   tokenNote = 'Token for gfork',
 }) {
-  github.authenticate({
+  api.authenticate({
     type: 'basic',
     username,
     password,
   });
 
-  const { token } = await github.authorization.create({
+  const { token } = await api.authorization.create({
     scopes: ['user', 'user:email', 'public_repo', 'repo', 'repo:status', 'gist'],
     note: tokenNote
   });
 
   return token;
-};
+}
 
 export async function authenticateWithToken({ token, silent = false }) {
-  silent || console.log(`Authenticating...`);
+  silent || console.log('Authenticating...');
 
-  github.authenticate({
+  api.authenticate({
     type: 'oauth',
     token,
   });
 
-  const { login } = await github.users.get({});
-  const [{ email }] = await github.users.getEmails({});
-  return { user: login, email }
-};
+  const [
+    { login },
+    [{ email }]
+  ] = await Promise.all([
+    api.users.get({}),
+    api.users.getEmails({})
+  ]);
+
+  return { user: login, email };
+}
