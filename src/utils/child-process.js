@@ -1,21 +1,12 @@
-import spawn from 'cross-spawn-promise';
+// import spawn from 'cross-spawn-promise';
+import cp from 'child-process-es6-promise';
 
 export function splitCommandStr(commandStr) {
   const [command, ...args] = commandStr.trim().split(/[\s]+/g);
   return [command, args];
 }
 
-export async function exec(command, args, opts = {}) {
-  if (arguments[0] instanceof Array) {
-    opts = arguments[1] || {};
-    [command, ...args] = arguments[0];
-  } else if (arguments[1] && !(arguments[1] instanceof Array)) {
-    opts = arguments[1] || {};
-    [command, args] = splitCommandStr(arguments[0]);
-  } else if (!arguments[1]) {
-    [command, args] = splitCommandStr(arguments[0]);
-    opts = {};
-  }
+export async function exec(command, opts = {}) {
   if (opts.capture) {
     opts = {...opts, capture: ['stdout', 'stderr'] };
   } else {
@@ -23,18 +14,19 @@ export async function exec(command, args, opts = {}) {
   }
   opts = { encoding: 'utf8', ...opts };
   opts = { shell: true, ...opts };
+  console.log({ opts });
   if (opts.env) { opts.env = {...process.env, ...opts.env }; }
-  args = args.filter(Boolean);
-  let cp, promise, result, stdout, stderr;
+  let child, promise, result, stdout, stderr;
   try {
-    promise = spawn(command, args, opts);
+    promise = cp.spawn(command, [], opts);
     try {
-      cp = promise.childProcess;
-      cp.stdout && cp.stdout.pipe(process.stdout);
-      cp.stderr && cp.stderr.pipe(process.stderr);
+      child = promise.child;
+      child.stdout && child.stdout.pipe(process.stdout);
+      child.stderr && child.stderr.pipe(process.stderr);
     } catch (error) {}
-    stdout = await promise;
-    stdout = fixStdout(stdout);
+    result = await promise;
+    stdout = fixStdout(result.stdout);
+    stderr = fixStderr(result.stderr);
     return stdout;
   } catch (err) {
     err.stdout = fixStdout(err.stdout);
