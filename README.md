@@ -332,6 +332,38 @@ Try changing the `token-note`
 $ gfork --edit-config --token-note "Some random new token note"
 ```
 
+## Similar projects
+
+|                                   | gfork | [forked] | [git-fork]    | [sgit]
+| -------------                     |:----: |:----:    |:-----:        |:----:
+| Forks                             |x      |x         |x              |
+| Auto-retrieves token              |x      |          |x              |
+| Clones                            |x      |          |x              |x
+| Opens a PR                        |x      |          |x              |
+| Fetches a PR                      |x      |          |               |
+| Works on GitHub URLs              |x      |x         |x              |x
+| Works on NPM package names        |x      |          |               |
+| Works on Bitbucket URLs           |       |          |               |x
+| Works on Gitlab URLs              |       |          |               |x
+| Https .git url type               |x      |          |o¹             |
+| Multiple projects simultaneously  |x      |          |               |
+| `rm -rf` before cloning           |x      |          |               |
+| Execute a command afterwards      |x      |          |               |
+| Use saved config                  |x      |          |               |
+
+<sup>o¹: *only* https urls</sup>
+
+Non-similar but relevant projects:
+
+* [npmgitdev]
+
+[forked]: https://github.com/eanplatter/forked
+[git-fork]: https://github.com/e-conomic/git-fork
+[sgit]: https://github.com/rascada/sgit
+[npmgitdev]: https://github.com/TerriaJS/npmgitdev
+
+
+
 
 [1]: https://help.github.com/articles/checking-out-pull-requests-locally/
 [2]: https://developer.github.com/v3/repos/forks/#create-a-fork
