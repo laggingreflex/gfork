@@ -8,6 +8,7 @@ import { input } from '../utils/prompt';
 import { hiddenProp } from '../utils/object';
 import { printHelp } from '../utils/help';
 import defaults from './defaults';
+import * as utils from './utils';
 
 const { argv } = yargs.options(defaults);
 
@@ -112,10 +113,8 @@ class Config {
       }
     }
 
-    config.command = args.command || args.cmd || args.c || !config.noSavedConfig && config.command;
-    if (config.command instanceof Array) { config.command = config.command.join(' '); }
-    config.currentDirCommand = args.currentDirCommand || args.rdc || !config.noSavedConfig && config.currentDirCommand;
-    if (config.currentDirCommand instanceof Array) { config.currentDirCommand = config.currentDirCommand.join(' '); }
+    config.command = utils.processCommand(args.command || args.cmd || args.c || !config.noSavedConfig && config.command);
+    config.currentDirCommand = utils.processCommand(args.currentDirCommand || args.rdc || !config.noSavedConfig && config.currentDirCommand);
 
     config.pullRequest = args.pullRequest || args.L;
     config.fetchPr = args.fetchPr || args.H;
