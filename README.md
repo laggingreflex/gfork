@@ -256,6 +256,15 @@ Your credentials are used for the first time to receive an authentication token 
 
 It uses the [GitHub API][2] to fork, and uses local `git` to do the rest.
 
+#### NPM module cloning
+
+When you specify an npm module it finds its github repository from its `package.json` and clones the resulting github project. It also handles any redirects.
+
+If the project name on the github differs from the npm module name supplied, it will use the supplied npm module name while cloning the github project. For example the npm module [`portscanner`][portscanner]'s github repo is named [`node-portscanner`][node-portscanner], if you do `gfork portscanner` it will use the name "portscanner" to create the resulting cloned directory.
+
+[portscanner]: https://www.npmjs.com/package/portscanner
+[node-portscanner]: https://github.com/baalexander/node-portscanner
+
 #### Config
 
 Settings are saved in config file (`~/.gfork`) in JSON format. You can edit the settings directly or by running `gfork --edit-config`
