@@ -24,7 +24,7 @@ export async function exec(command, opts = {}) {
       child.stderr && child.stderr.pipe(process.stderr);
     } catch (error) {}
     stdout = await promise;
-    if (stdout.stdout) {
+    if (stdout && stdout.stdout) {
       stdout = stdout.stdout;
     }
     stdout = fixStdout(stdout);
