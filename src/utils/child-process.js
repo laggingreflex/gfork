@@ -1,5 +1,5 @@
-// import spawn from 'cross-spawn-promise';
-import cp from 'child-process-es6-promise';
+import spawn from 'cross-spawn-promise';
+// import {spawn} from 'child-process-es6-promise';
 
 export function splitCommandStr(commandStr) {
   const [command, ...args] = commandStr.trim().split(/[\s]+/g);
@@ -14,19 +14,21 @@ export async function exec(command, opts = {}) {
   }
   opts = { encoding: 'utf8', ...opts };
   opts = { shell: true, ...opts };
-  console.log({ opts });
   if (opts.env) { opts.env = {...process.env, ...opts.env }; }
   let child, promise, result, stdout, stderr;
   try {
-    promise = cp.spawn(command, [], opts);
+    promise = spawn(command, [], opts);
     try {
-      child = promise.child;
+      child = promise.childProcess || promise.child;
       child.stdout && child.stdout.pipe(process.stdout);
       child.stderr && child.stderr.pipe(process.stderr);
     } catch (error) {}
-    result = await promise;
-    stdout = fixStdout(result.stdout);
-    stderr = fixStderr(result.stderr);
+    stdout = await promise;
+    if (stdout.stdout) {
+      stdout = stdout.stdout;
+    }
+    stdout = fixStdout(stdout);
+    // stderr = fixStderr(result.stderr);
     return stdout;
   } catch (err) {
     err.stdout = fixStdout(err.stdout);
