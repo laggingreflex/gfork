@@ -362,15 +362,23 @@ $ gfork --edit-config --token-note "Some random new token note"
 
 <sup>o¹: *only* https urls</sup>
 
+[forked]: https://github.com/eanplatter/forked
+[git-fork]: https://github.com/e-conomic/git-fork
+[sgit]: https://github.com/rascada/sgit
+
 Non-similar but relevant projects:
 
 * [npmgitdev]
 
-[forked]: https://github.com/eanplatter/forked
-[git-fork]: https://github.com/e-conomic/git-fork
-[sgit]: https://github.com/rascada/sgit
 [npmgitdev]: https://github.com/TerriaJS/npmgitdev
 
+Not related in any way, but nice little libraries for testing:
+
+* [rtyley/small-test-repo]
+* [noop4]
+
+[noop4]: https://github.com/gabrieleds/noop4
+[rtyley/small-test-repo]: https://github.com/rtyley/small-test-repo
 
 
 
