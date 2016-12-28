@@ -86,7 +86,7 @@ export async function geGithubUrlFromNpmPackageName(packageName) {
   if (!url) {
     throw new Error(`{packageName: ${packageName}} doesn't seem to have a repository.url`);
   }
-  if (url.includes('git')) {
+  if (url.match(/\.git$/)) {
     url = resolveGitUrl(url);
   }
   return url;
