@@ -1,6 +1,6 @@
 {
   "name": "gfork",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Fork, clone, init github/npm projects from command-line.",
   "main": "dist",
   "bin": "cli.js",
