@@ -380,15 +380,25 @@ Not related in any way, but nice little libraries for testing:
 [noop4]: https://github.com/gabrieleds/noop4
 [rtyley/small-test-repo]: https://github.com/rtyley/small-test-repo
 
-
-
-[1]: https://help.github.com/articles/checking-out-pull-requests-locally/
-[2]: https://developer.github.com/v3/repos/forks/#create-a-fork
-
-
 [npm link]: https://www.google.com/search?q=use+npm+link
 
 [git-fork]: https://github.com/e-conomic/git-fork
 [forked]: https://github.com/eanplatter/forked
 
 [get-token]: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
+
+## Limitations
+
+Doesn't work on [Lerna] packages, like [babel-register].
+
+[Lerna]: https://github.com/lerna/lerna
+[babel-register]: https://github.com/babel/babel/tree/master/packages/babel-register
+
+
+
+
+[1]: https://help.github.com/articles/checking-out-pull-requests-locally/
+[2]: https://developer.github.com/v3/repos/forks/#create-a-fork
+
+
+
