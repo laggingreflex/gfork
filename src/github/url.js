@@ -33,15 +33,16 @@ export async function decodeUrl(input) {
   }
 }
 
-export async function generateUrl({ https, token, domain = 'github.com', user, owner, repo } = {}) {
+export async function generateUrl({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) {
   let forkedUrl, sourceUrl;
+  const fRepo = forkedRepoName || repo;
   if (https) {
     if (!token) { throw new Error('Need a token for https URL'); }
-    forkedUrl = `https://${token}:x-oauth-basic@github.com/${user}/${repo}.git`;
     sourceUrl = `https://${token}:x-oauth-basic@github.com/${owner}/${repo}.git`;
+    forkedUrl = `https://${token}:x-oauth-basic@github.com/${user}/${fRepo}.git`;
   } else {
-    forkedUrl = `git@${domain}:${user}/${repo}.git`;
     sourceUrl = `git@${domain}:${owner}/${repo}.git`;
+    forkedUrl = `git@${domain}:${user}/${fRepo}.git`;
   }
   return { forkedUrl, sourceUrl };
 }

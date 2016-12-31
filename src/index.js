@@ -101,7 +101,7 @@ export async function main() {
 
 async function actual(input) {
   const { owner, repo, originalRepoName } = await github.url.decodeUrl(input);
-  await github.repo.fork({ owner, repo, user: config.username });
+  const forkedRepoName = await github.repo.fork({ owner, repo, user: config.username });
   const { forkedUrl, sourceUrl } = await github.url.generateUrl({
     https: config.https,
     token: config.token,
@@ -109,6 +109,7 @@ async function actual(input) {
     user: config.username,
     owner,
     repo,
+    forkedRepoName,
   });
   let cwd, gitCloneCwd, repoDir, repoFullDir, rootDirBasename;
   if (config.here) {
