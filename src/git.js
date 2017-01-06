@@ -1,9 +1,13 @@
 import path from 'path';
+import _ from 'lodash';
 import { cp } from './utils';
 
-export async function clone({ dir, url, cwd }) {
+export async function clone({ dir, url, cwd, args }) {
   try {
-    await cp.exec(`git clone ${url} ${dir}`, { cwd });
+    const argStr = _.map(_.omitBy(args, _.isUndefined), (val, arg) => `--${arg}=${val}`);
+    // console.log({ args, argStr });
+    // process.exit(1);
+    await cp.exec(`git clone ${url} ${dir} ${argStr}`, { cwd });
   } catch (err) {
     if (err.message.match(128)) {
       err.message += `\nIf you're getting "Permission denied (publickey)" error, you probably need set up an SSH key with Github (more info: https://help.github.com/articles/generating-an-ssh-key). Or try setting --url-type=https (or --https) to use 'https://<token>@github.com/...' style git URLs.`;

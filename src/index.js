@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 import path from 'path';
 import fs from 'fs-promise';
+import _ from 'lodash';
 import config from './config';
 import * as git from './git';
 import * as github from './github';
@@ -154,6 +155,7 @@ async function actual(input) {
     url: forkedUrl,
     dir: repoDir,
     cwd: gitCloneCwd,
+    args: _.pick(config, ['depth'])
   });
 
   await git.addRemote({

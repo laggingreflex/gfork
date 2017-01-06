@@ -15,6 +15,8 @@ add('check', { type: 'boolean' });
 add('pullRequest', { type: 'boolean', alias: ['L'] });
 add('fetchPr', { type: 'number', alias: ['H'] });
 
+add('depth', { type: 'number' });
+
 add('noSavedConfig', { type: 'boolean', alias: ['X'] });
 
 add('https', { type: 'boolean', alias: ['http']});

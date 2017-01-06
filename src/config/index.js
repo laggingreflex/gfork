@@ -59,8 +59,8 @@ class Config {
       }
     }
 
-    config.username = args.username || args.u || !config.noSavedConfig && config.username;
-    config.password = args.password || args.p || !config.noSavedConfig && config.password;
+    config.username = args.username || args.u || config.username;
+    config.password = args.password || args.p || config.password;
 
     config.root = process.cwd();
 
@@ -70,6 +70,8 @@ class Config {
     }
 
     config.noSavedConfig = args.noSavedConfig || args.X;
+
+    config.depth = !_.isUndefined(args.depth) ? args.depth : !config.noSavedConfig && config.depth;
 
     config.forksDir = args.forksDir || args.forkDir || args.fd || args.F || !config.noSavedConfig && config.forksDir;
     if (config.forksDir === true) {
