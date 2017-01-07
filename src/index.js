@@ -145,44 +145,67 @@ async function actual(input) {
       if (await prompt.confirm('Delete everything from it?')) {
         console.log(`Emptying dir: ${repoDir}...`);
         await fs.emptydir(repoFullDir);
+      } else if (config.command && await prompt.confirm('Execute forksDir command?')) {
+        if (config.currentDirCommand && await prompt.confirm('Execute currentDir command?', true)) {
+          await executeForksDirCommand();
+          await executeCurrentDirCommand();
+          return;
+        } else {
+          await executeForksDirCommand();
+          return;
+        }
+      } else if (config.currentDirCommand && await prompt.confirm('Execute currentDir command?', true)) {
+        await executeCurrentDirCommand();
+        return;
       } else {
         throw new Error(`Non-empty directory. Please choose an empty dir or use --rm switch to remove all files.\n${repoFullDir}`);
       }
     }
   }
 
-  await git.clone({
-    url: forkedUrl,
-    dir: repoDir,
-    cwd: gitCloneCwd,
-    args: _.pick(config, ['depth'])
-  });
+  await clone();
+  await executeForksDirCommand();
+  await executeCurrentDirCommand();
 
-  await git.addRemote({
-    cwd: repoFullDir,
-    name: config.remote,
-    url: sourceUrl
-  });
+  async function clone() {
+    await git.clone({
+      url: forkedUrl,
+      dir: repoDir,
+      cwd: gitCloneCwd,
+      args: _.pick(config, ['depth'])
+    });
 
-  await git.setUser({
-    cwd: repoFullDir,
-    name: config.username,
-    email: config.email
-  });
-
-  if (config.command) {
-    console.log(`Executing command: \`${config.command}\` in '${path.basename(repoFullDir)}'`);
-    await cp.exec(config.command, {
+    await git.addRemote({
       cwd: repoFullDir,
-      env: { repo },
+      name: config.remote,
+      url: sourceUrl
+    });
+
+    await git.setUser({
+      cwd: repoFullDir,
+      name: config.username,
+      email: config.email
     });
   }
-  if (config.currentDirCommand) {
-    console.log(`Executing command: \`${config.currentDirCommand}\` in '${path.basename(config.root)}'`);
-    await cp.exec(config.currentDirCommand, {
-      cwd: config.root,
-      env: { repo },
-    });
+
+  async function executeForksDirCommand() {
+    if (config.command) {
+      console.log(`Executing command: \`${config.command}\` in '${path.basename(repoFullDir)}'`);
+      await cp.exec(config.command, {
+        cwd: repoFullDir,
+        env: { repo },
+      });
+    }
+  }
+
+  async function executeCurrentDirCommand() {
+    if (config.currentDirCommand) {
+      console.log(`Executing command: \`${config.currentDirCommand}\` in '${path.basename(config.root)}'`);
+      await cp.exec(config.currentDirCommand, {
+        cwd: config.root,
+        env: { repo },
+      });
+    }
   }
 }
 

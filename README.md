@@ -324,6 +324,27 @@ git checkout #42
 ```
 Note that it automatically creates a new branch name `#` followed by the pull request ID, and also checks out that branch.
 
+### Extra features
+
+#### Non-empty directory
+
+If the directory in which the repo is supposed to be cloned is non-empty, and you didn't provide `--rm` switch, it'll prompt you to delete the contents.
+
+If you don't wish to delete the contents, maybe because the previously cloned copy is good enough, it'll ask you to execute the configured commands.
+
+For eg., I've set up my `forksDir` as `~/forks`, `--command="npm link"`, and `--current-dir-command="npm link $repo"` (see [#protip](#protip) for more details on this setup). Now I've already ran `"gfork arrify"` once before in another project and I want to run it again in this `"current-project"` **but** I don't want to clone the repo all over again, nor do I want to run `--command="npm link"`, I *just* want to run the `--current-dir-command="npm link $repo"`.
+
+```sh
+$ gfork arrify
+Cloning in forksDir: ~/forks/arrify...
+Non-empty directory: ~/forks/arrify
+? Delete everything from it? false
+? Execute forksDir command? false
+? Execute currentDir command? true
+Executing command: `npm link $repo` in 'current-project'
+./node_modules/arrify -> ~/forks/arrify
+```
+
 ## Issues
 
 Feel free to [open issues](../../issues) and submit PRs!
