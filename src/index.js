@@ -146,16 +146,19 @@ async function actual(input) {
         console.log(`Emptying dir: ${repoDir}...`);
         await fs.emptydir(repoFullDir);
       } else if (config.command && await prompt.confirm('Execute forksDir command?')) {
+        const forksDirCommand = await prompt.input('Command:', config.command);
         if (config.currentDirCommand && await prompt.confirm('Execute currentDir command?', true)) {
-          await executeForksDirCommand();
-          await executeCurrentDirCommand();
+          const currentDirCommand = await prompt.input('Command:', config.currentDirCommand);
+          await executeForksDirCommand(forksDirCommand);
+          await executeCurrentDirCommand(currentDirCommand);
           return;
         } else {
-          await executeForksDirCommand();
+          await executeForksDirCommand(forksDirCommand);
           return;
         }
       } else if (config.currentDirCommand && await prompt.confirm('Execute currentDir command?', true)) {
-        await executeCurrentDirCommand();
+        const currentDirCommand = await prompt.input('Command:', config.currentDirCommand);
+        await executeCurrentDirCommand(currentDirCommand);
         return;
       } else {
         throw new Error(`Non-empty directory. Please choose an empty dir or use --rm switch to remove all files.\n${repoFullDir}`);
@@ -164,8 +167,8 @@ async function actual(input) {
   }
 
   await clone();
-  await executeForksDirCommand();
-  await executeCurrentDirCommand();
+  await executeForksDirCommand(config.command);
+  await executeCurrentDirCommand(config.currentDirCommand);
 
   async function clone() {
     await git.clone({
@@ -188,20 +191,20 @@ async function actual(input) {
     });
   }
 
-  async function executeForksDirCommand() {
-    if (config.command) {
-      console.log(`Executing command: \`${config.command}\` in '${path.basename(repoFullDir)}'`);
-      await cp.exec(config.command, {
+  async function executeForksDirCommand(command) {
+    if (command) {
+      console.log(`Executing command: \`${command}\` in '${path.basename(repoFullDir)}'`);
+      await cp.exec(command, {
         cwd: repoFullDir,
         env: { repo },
       });
     }
   }
 
-  async function executeCurrentDirCommand() {
-    if (config.currentDirCommand) {
-      console.log(`Executing command: \`${config.currentDirCommand}\` in '${path.basename(config.root)}'`);
-      await cp.exec(config.currentDirCommand, {
+  async function executeCurrentDirCommand(command) {
+    if (command) {
+      console.log(`Executing command: \`${command}\` in '${path.basename(config.root)}'`);
+      await cp.exec(command, {
         cwd: config.root,
         env: { repo },
       });
