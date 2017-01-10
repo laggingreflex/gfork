@@ -196,7 +196,7 @@ async function actual(input) {
       console.log(`Executing command: \`${command}\` in '${path.basename(repoFullDir)}'`);
       await cp.exec(command, {
         cwd: repoFullDir,
-        env: { repo },
+        env: { repo: originalRepoName || repo },
       });
     }
   }
@@ -206,7 +206,7 @@ async function actual(input) {
       console.log(`Executing command: \`${command}\` in '${path.basename(config.root)}'`);
       await cp.exec(command, {
         cwd: config.root,
-        env: { repo },
+        env: { repo: originalRepoName || repo },
       });
     }
   }
