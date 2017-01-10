@@ -193,20 +193,24 @@ async function actual(input) {
 
   async function executeForksDirCommand(command) {
     if (command) {
-      console.log(`Executing command: \`${command}\` in '${path.basename(repoFullDir)}'`);
+      const repoEnv = originalRepoName || repo;
+      const commandStr = command.replace(/\$repo|%repo%/g, repoEnv);
+      console.log(`Executing command: \`${commandStr}\` in '${path.basename(repoFullDir)}'`);
       await cp.exec(command, {
         cwd: repoFullDir,
-        env: { repo: originalRepoName || repo },
+        env: { repo: repoEnv },
       });
     }
   }
 
   async function executeCurrentDirCommand(command) {
     if (command) {
-      console.log(`Executing command: \`${command}\` in '${path.basename(config.root)}'`);
+      const repoEnv = originalRepoName || repo;
+      const commandStr = command.replace(/\$repo|%repo%/g, repoEnv);
+      console.log(`Executing command: \`${commandStr}\` in '${path.basename(config.root)}'`);
       await cp.exec(command, {
         cwd: config.root,
-        env: { repo: originalRepoName || repo },
+        env: { repo: repoEnv },
       });
     }
   }
