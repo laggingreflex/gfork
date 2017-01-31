@@ -19,6 +19,11 @@ export async function clone({ dir, url, cwd, args }) {
 export async function addRemote({ cwd, name = 'src', url }) {
   console.log(`Adding remote "${name}" => "${url}"`);
   await cp.exec(`git remote add ${name} ${url}`, { cwd });
+  await cp.exec(`git fetch ${name} master`, { cwd });
+  await cp.exec(`git checkout -b src`, { cwd });
+  await cp.exec(`git reset --hard src/master`, { cwd });
+  await cp.exec(`git branch --set-upstream-to src/master`, { cwd });
+  await cp.exec(`git checkout master`, { cwd });
   await cp.exec('git remote -v', { cwd });
 }
 
