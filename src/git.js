@@ -74,6 +74,6 @@ export async function readDir({ cwd, src }) {
 
 export async function fetchPr({ owner, repo, src, pr }) {
   console.log(`Fetching http://github.com/${owner}/${repo}/pull/${pr}...`);
-  await cp.exec(`git fetch ${src} pull/${pr}/head:#${pr}`);
-  await cp.exec(`git checkout #${pr}`);
+  await cp.exec(`git fetch ${src} pull/${pr}/head:pull/${pr}`);
+  await cp.exec(`git checkout pull/${pr}`);
 }
