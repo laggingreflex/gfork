@@ -6,7 +6,7 @@ const splitCommandStr = exports.splitCommandStr = (commandStr) =>  {
   return [command, args];
 }
 
-const exec = async (command, opts = exports.exec = async (command, opts = {}) =>  {
+const exec = exports.exec = async (command, opts = {}) =>  {
   if (opts.capture) {
     opts = {...opts, capture: ['stdout', 'stderr'] };
   } else {

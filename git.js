@@ -16,7 +16,7 @@ const clone = exports.clone = async ({ dir, url, cwd, args }) =>  {
   }
 }
 
-const addRemote = async ({ cwd, name = exports.addRemote = async ({ cwd, name = 'src', url }) =>  {
+const addRemote = exports.addRemote = async ({ cwd, name = 'src', url }) =>  {
   console.log(`Adding remote "${name}" => "${url}"`);
   await cp.exec(`git remote add ${name} ${url}`, { cwd });
   await cp.exec(`git fetch ${name} master`, { cwd });

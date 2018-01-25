@@ -33,7 +33,7 @@ const decodeUrl = exports.decodeUrl = async (input) =>  {
   }
 }
 
-const generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = exports.generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) =>  {
+const generateUrl = exports.generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) =>  {
   let forkedUrl, sourceUrl;
   const fRepo = forkedRepoName || repo;
   if (https) {

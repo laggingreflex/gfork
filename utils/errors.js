@@ -1,4 +1,4 @@
-export default function handleErrors(err) {
+const handleErrors = module.exports = (err) => {
   // console.error(err.stderr || err.stdout || err.message);
   console.error(err);
 }

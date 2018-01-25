@@ -1,3 +1,3 @@
-export * as repo from './repo';
-export * as url from './url';
-export * as auth from './auth';
+const repo = exports.repo = require('./repo');
+const url = exports.url = require('./url');
+const auth = exports.auth = require('./auth');

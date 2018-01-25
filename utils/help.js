@@ -1,4 +1,4 @@
-const packageJson = require('../../package.json');
+const packageJson = require('../package.json');
 
 const printHelp = exports.printHelp = (exit) =>  {
   console.log(`

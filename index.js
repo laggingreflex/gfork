@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('source-map-support/register');
 const path = require('path');
 const fs = require('fs-promise');
