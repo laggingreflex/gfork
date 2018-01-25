@@ -1,11 +1,11 @@
-import 'source-map-support/register';
-import path from 'path';
-import fs from 'fs-promise';
-import _ from 'lodash';
-import config from './config';
-import * as git from './git';
-import * as github from './github';
-import { prompt, cp, errors } from './utils';
+require('source-map-support/register');
+const path = require('path');
+const fs = require('fs-promise');
+const _ = require('lodash');
+const config = require('./config');
+const git = require('./git');
+const github = require('./github');
+const { prompt, cp, errors } = require('./utils');
 
 async function login({ silent = false } = {}) {
   if (!config.token) {

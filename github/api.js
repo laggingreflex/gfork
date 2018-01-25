@@ -1,2 +1,2 @@
-import GitHubApi from 'github';
+const GitHubApi = require('github');
 export default new GitHubApi({});

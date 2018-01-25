@@ -1,7 +1,7 @@
-import assert from 'assert';
-import * as git from '../src/git';
-import fs from 'fs';
-import rimraf from 'rimraf';
+const assert = require('assert');
+const git = require('../src/git');
+const fs = require('fs');
+const rimraf = require('rimraf');
 
 describe('git.clone', async() => {
   it('should exist', async() => {

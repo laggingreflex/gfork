@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import request from 'client-request/promise';
-import resolveRedirect from 'resolve-redirect';
-import resolveGitUrl from 'github-url-from-git';
+const _ = require('lodash');
+const request = require('client-request/promise');
+const resolveRedirect = require('resolve-redirect');
+const resolveGitUrl = require('github-url-from-git');
 
 export async function decodeUrl(input) {
   if (!input) {

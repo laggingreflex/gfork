@@ -1,5 +1,5 @@
-import opn from 'opn';
-import github from './api';
+const opn = require('opn');
+const github = require('./api');
 
 export async function fork({ owner, repo, user }) {
   const result = await github.repos.fork({ owner, repo });

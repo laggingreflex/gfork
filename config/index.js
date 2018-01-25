@@ -1,14 +1,14 @@
-import os from 'os';
-import path from 'path';
-import fs from 'fs-promise';
-import yargs from 'yargs';
-import _ from 'lodash';
-import isEmpty from 'is-empty';
-import { input } from '../utils/prompt';
-import { hiddenProp } from '../utils/object';
-import { printHelp } from '../utils/help';
-import defaults from './defaults';
-import * as utils from './utils';
+const os = require('os');
+const path = require('path');
+const fs = require('fs-promise');
+const yargs = require('yargs');
+const _ = require('lodash');
+const isEmpty = require('is-empty');
+const { input } = require('../utils/prompt');
+const { hiddenProp } = require('../utils/object');
+const { printHelp } = require('../utils/help');
+const defaults = require('./defaults');
+const utils = require('./utils');
 
 const { argv } = yargs.options(defaults);
 

@@ -1,5 +1,5 @@
-import spawn from 'cross-spawn-promise';
-// import {spawn} from 'child-process-es6-promise';
+const spawn = require('cross-spawn-promise');
+// const {spawn} = require('child-process-es6-promise');
 
 export function splitCommandStr(commandStr) {
   const [command, ...args] = commandStr.trim().split(/[\s]+/g);

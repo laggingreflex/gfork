@@ -1,6 +1,6 @@
-import path from 'path';
-import _ from 'lodash';
-import { cp } from './utils';
+const path = require('path');
+const _ = require('lodash');
+const { cp } = require('./utils');
 
 export async function clone({ dir, url, cwd, args }) {
   try {

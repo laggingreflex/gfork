@@ -1,5 +1,5 @@
-import assert from 'assert';
-import { getOwnerRepoFromGithubUrl } from '../src/github';
+const assert = require('assert');
+const { getOwnerRepoFromGithubUrl } = require('../src/github');
 
 describe('github.getOwnerRepoFromGithubUrl', function() {
   describe('extract {owner, repo} from url', function() {

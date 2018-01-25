@@ -1,4 +1,4 @@
-import api from './api';
+const api = require('./api');
 
 export async function getTokenFromGitHub({
   username,

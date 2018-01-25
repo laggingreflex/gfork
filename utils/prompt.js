@@ -1,6 +1,6 @@
-import Enquirer from 'enquirer';
-import Confirm from 'prompt-confirm';
-import Password from 'prompt-password';
+const Enquirer = require('enquirer');
+const Confirm = require('prompt-confirm');
+const Password = require('prompt-password');
 
 const enquirer = new Enquirer();
 
