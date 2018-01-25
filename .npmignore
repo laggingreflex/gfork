@@ -7,7 +7,6 @@ tests
 tests-coverage
 **/*.test.*
 jest.json
-dist/**/*.map
 yarn.lock
 src
 sh

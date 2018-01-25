@@ -2,8 +2,8 @@
   "name": "gfork",
   "version": "0.10.0",
   "description": "Fork, clone, init github/npm projects from command-line.",
-  "main": "dist",
-  "bin": "cli.js",
+  "main": "index.js",
+  "bin": "index.js",
   "scripts": {
     "build": "rimraf dist && babel src -d dist --source-maps",
     "lint": "eslint src tests",
@@ -31,9 +31,6 @@
     "yargs": "^6.6.1-candidate.4"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-preset-es2015-node6": "^0.4.0",
-    "babel-preset-stage-0": "^6.22.0",
     "chokidar": "^1.6.1",
     "eslint": "^3.14.1",
     "eslint-config-canonical": "^7.1.0",
