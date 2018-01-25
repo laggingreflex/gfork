@@ -208,4 +208,4 @@ class Config {
   }
 }
 
-export default new Config(argv);
+module.exports = new Config(argv);

@@ -1,6 +1,6 @@
 const packageJson = require('../../package.json');
 
-export function printHelp(exit) {
+const printHelp = exports.printHelp = (exit) =>  {
   console.log(`
     ${packageJson.description}
 
@@ -38,7 +38,7 @@ export function printHelp(exit) {
   exit && process.exit(1);
 }
 
-export function showUsage() {
+const showUsage = exports.showUsage = () =>  {
   console.log(`
     Usage:
       gfork <url>
@@ -50,7 +50,7 @@ export function showUsage() {
   `);
 }
 
-export function showErrors(errors) {
+const showErrors = exports.showErrors = (errors) =>  {
   if (errors instanceof Array) {
     console.error(`
       Errors:

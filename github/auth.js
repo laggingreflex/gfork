@@ -19,7 +19,7 @@ export async function getTokenFromGitHub({
   return token;
 }
 
-export async function authenticateWithToken({ token, silent = false }) {
+const authenticateWithToken = async ({ token, silent = exports.authenticateWithToken = async ({ token, silent = false }) =>  {
   silent || console.log('Authenticating...');
 
   api.authenticate({

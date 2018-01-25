@@ -26,7 +26,7 @@ async function editConfig() {
   await config.edit();
 }
 
-export async function main() {
+const main = exports.main = async () =>  {
   if (config.editConfig) {
     await config.edit();
     process.exit(0);

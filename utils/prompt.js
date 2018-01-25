@@ -7,7 +7,7 @@ const enquirer = new Enquirer();
 enquirer.register('confirm', Confirm);
 enquirer.register('password', Password);
 
-export async function confirm(message, def) {
+const confirm = exports.confirm = async (message, def) =>  {
   return (await enquirer.prompt({
     name: 'confirm',
     type: 'confirm',
@@ -16,7 +16,7 @@ export async function confirm(message, def) {
   })).confirm;
 }
 
-export async function input(message, def) {
+const input = exports.input = async (message, def) =>  {
   return (await enquirer.prompt({
     name: 'input',
     message,
@@ -24,7 +24,7 @@ export async function input(message, def) {
   })).input;
 }
 
-export async function password(message, def) {
+const password = exports.password = async (message, def) =>  {
   return (await enquirer.prompt({
     name: 'password',
     type: 'password',

@@ -1,7 +1,7 @@
 const opn = require('opn');
 const github = require('./api');
 
-export async function fork({ owner, repo, user }) {
+const fork = exports.fork = async ({ owner, repo, user }) =>  {
   const result = await github.repos.fork({ owner, repo });
   const { name } = result;
   if (name !== repo) {
@@ -10,7 +10,7 @@ export async function fork({ owner, repo, user }) {
   return name;
 }
 
-export function openPr({ owner, repo, branch }) {
+const openPr = exports.openPr = ({ owner, repo, branch }) =>  {
   const url = `https://github.com/${owner}/${repo}/compare/${branch}`;
   console.log(`Navigating to: ${url}`);
   opn(url);

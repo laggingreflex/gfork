@@ -1,4 +1,4 @@
-export function processCommand(command) {
+const processCommand = exports.processCommand = (command) =>  {
   if (command instanceof Array) {
     command = command.join(' ');
   }

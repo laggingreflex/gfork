@@ -3,7 +3,7 @@ const request = require('client-request/promise');
 const resolveRedirect = require('resolve-redirect');
 const resolveGitUrl = require('github-url-from-git');
 
-export async function decodeUrl(input) {
+const decodeUrl = exports.decodeUrl = async (input) =>  {
   if (!input) {
     throw new Error('Need a URL/packageName');
   } else if (input.match(/^[a-zA-Z0-9-_.]+$/)) {
@@ -33,7 +33,7 @@ export async function decodeUrl(input) {
   }
 }
 
-export async function generateUrl({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) {
+const generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = exports.generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) =>  {
   let forkedUrl, sourceUrl;
   const fRepo = forkedRepoName || repo;
   if (https) {
@@ -47,7 +47,7 @@ export async function generateUrl({ https, token, domain = 'github.com', user, o
   return { forkedUrl, sourceUrl };
 }
 
-export async function getOwnerRepoFromGithubUrl(url) {
+const getOwnerRepoFromGithubUrl = exports.getOwnerRepoFromGithubUrl = async (url) =>  {
   if (url.match(/^git\+http/)) {
     url = url.substr(4);
   }
@@ -63,7 +63,7 @@ export async function getOwnerRepoFromGithubUrl(url) {
   return { owner, repo, url };
 }
 
-export function getPackageNameFromNpmUrl(url) {
+const getPackageNameFromNpmUrl = exports.getPackageNameFromNpmUrl = (url) =>  {
   const regexp = /npmjs.com\/package\/([a-zA-Z0-9-_.]+)($|\/$)/;
   const result = regexp.exec(url);
   if (!result || result.length < 1) {
@@ -73,7 +73,7 @@ export function getPackageNameFromNpmUrl(url) {
   return packageName;
 }
 
-export async function geGithubUrlFromNpmPackageName(packageName) {
+const geGithubUrlFromNpmPackageName = exports.geGithubUrlFromNpmPackageName = async (packageName) =>  {
   let json, url;
   try {
     json = await request({

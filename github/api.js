@@ -1,2 +1,2 @@
 const GitHubApi = require('github');
-export default new GitHubApi({});
+module.exports = new GitHubApi({});

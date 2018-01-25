@@ -21,4 +21,4 @@ add('noSavedConfig', { type: 'boolean', alias: ['X'] });
 
 add('https', { type: 'boolean', alias: ['http']});
 
-export default defaults;
+module.exports = defaults;

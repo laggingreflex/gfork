@@ -1,12 +1,12 @@
 const spawn = require('cross-spawn-promise');
 // const {spawn} = require('child-process-es6-promise');
 
-export function splitCommandStr(commandStr) {
+const splitCommandStr = exports.splitCommandStr = (commandStr) =>  {
   const [command, ...args] = commandStr.trim().split(/[\s]+/g);
   return [command, args];
 }
 
-export async function exec(command, opts = {}) {
+const exec = async (command, opts = exports.exec = async (command, opts = {}) =>  {
   if (opts.capture) {
     opts = {...opts, capture: ['stdout', 'stderr'] };
   } else {
@@ -38,13 +38,13 @@ export async function exec(command, opts = {}) {
   }
 }
 
-export function fixStdout(std) {
+const fixStdout = exports.fixStdout = (std) =>  {
   if (!std) { return ''; }
   if (typeof std !== 'string') { std = std.toString(); }
   std = std.replace(/(.*)([\r\n]+)$/, '$1');
   return std;
 }
-export function fixStderr(std) {
+const fixStderr = exports.fixStderr = (std) =>  {
   std = fixStdout(std);
   if (!std) { return ''; }
   std = std.replace(/[\.]*$/, '. ');
