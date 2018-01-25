@@ -195,6 +195,7 @@ async function actual(input) {
 
   async function executeForksDirCommand(command) {
     if (command) {
+      if (config.confirmCommand && !await prompt.confirm('Execute forksDir command?', true)) return;
       const repoEnv = originalRepoName || repo;
       const commandStr = command.replace(/\$repo|%repo%/g, repoEnv);
       console.log(`Executing command: \`${commandStr}\` in '${path.basename(repoFullDir)}'`);
@@ -207,6 +208,7 @@ async function actual(input) {
 
   async function executeCurrentDirCommand(command) {
     if (command) {
+      if (config.confirmCurrentDirCommand && !await prompt.confirm('Execute currentDir command?', true)) return;
       const repoEnv = originalRepoName || repo;
       const commandStr = command.replace(/\$repo|%repo%/g, repoEnv);
       console.log(`Executing command: \`${commandStr}\` in '${path.basename(config.root)}'`);

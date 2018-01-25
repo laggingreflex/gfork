@@ -118,6 +118,10 @@ class Config {
     config.command = utils.processCommand(args.command || args.cmd || args.c || !config.noSavedConfig && config.command);
     config.currentDirCommand = utils.processCommand(args.currentDirCommand || args.rdc || !config.noSavedConfig && config.currentDirCommand);
 
+    config.confirmCommands = utils.processCommand(args.confirmCommands || !config.noSavedConfig && config.confirmCommands);
+    config.confirmCommand = utils.processCommand(args.confirmCommand || config.confirmCommands || !config.noSavedConfig && config.confirmCommand);
+    config.confirmCurrentDirCommand = utils.processCommand(args.confirmCurrentDirCommand || config.confirmCommand || config.confirmCommands || !config.noSavedConfig && config.confirmCurrentDirCommand);
+
     config.pullRequest = args.pullRequest || args.L;
     config.fetchPr = args.fetchPr || args.H;
     if (config.pullRequest && !config.here) {
