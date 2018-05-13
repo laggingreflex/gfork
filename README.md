@@ -25,7 +25,7 @@ gfork [OPTIONS] [NPM library or GitHub project]
 -L, --pull-request          Create a pull request from current branch. (opens default browser) (requires --here)
 -H, --fetch-pr              Fetch a PR from src. (shortcut to: git fetch src pull/42/head:#42) (requires --here)
 -t, --token                 Specify token manually (otherwise auto-retrieved)
--n, --token-note            Note to use when getting token (default "Tokek for gfork").
+-n, --token-note            Note to use when getting token (default "Token for gfork").
 -f, --config-file           File to save config and token for future (default ~/.gfork)
 -u, --username              Your GitHub username (only 1st time) [optional: prompted if necessary]
 -p, --password              Your GitHub password (only 1st time) [optional: prompted if necessary]
