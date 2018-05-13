@@ -33,6 +33,7 @@ gfork [OPTIONS] [NPM library or GitHub project]
 -d, --domain                Use a different domain name than (default "github.com"). In case you use 'acc1.github.com' in your SSH config
 --url-type                  Github URL type to use when cloning ('git@github.com/...' or 'https://<token>@github.com/...'). Default: git
 --http                      Shortcut for --url-type=https. Use this if you haven't set up your SSH public key in github: https://help.github.com/articles/generating-an-ssh-key/
+--depth                     Create shallow clone of that depth (applied to git command)
 -e, --edit-config           Edit config. Either edit all config, or when used with other arguments just edit those.
 -X, --no-saved-config       Don't use any saved config, except token.
 ```
@@ -376,6 +377,7 @@ $ gfork --edit-config --token-note "Some random new token note"
 | Works on Bitbucket URLs           |       |          |               |x
 | Works on Gitlab URLs              |       |          |               |x
 | Https .git url type               |x      |          |o¹             |
+| Shallow clone                     |x      |          |               |
 | Multiple projects simultaneously  |x      |          |               |
 | `rm -rf` before cloning           |x      |          |               |
 | Execute a command afterwards      |x      |          |               |
