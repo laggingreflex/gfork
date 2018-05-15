@@ -2,7 +2,7 @@ const path = require('path');
 const _ = require('lodash');
 const { cp } = require('./utils');
 
-const clone = exports.clone = async ({ dir, url, cwd, args }) =>  {
+const clone = exports.clone = async ({ dir, url, cwd, args }) => {
   try {
     const argStr = _.map(_.omitBy(args, _.isUndefined), (val, arg) => `--${arg}=${val}`);
     // console.log({ args, argStr });
@@ -14,9 +14,9 @@ const clone = exports.clone = async ({ dir, url, cwd, args }) =>  {
     }
     throw err;
   }
-}
+};
 
-const addRemote = exports.addRemote = async ({ cwd, name = 'src', url }) =>  {
+const addRemote = exports.addRemote = async ({ cwd, name = 'src', url }) => {
   console.log(`Adding remote "${name}" => "${url}"`);
   await cp.exec(`git remote add ${name} ${url}`, { cwd });
   await cp.exec(`git fetch ${name} master`, { cwd });
@@ -25,16 +25,16 @@ const addRemote = exports.addRemote = async ({ cwd, name = 'src', url }) =>  {
   await cp.exec(`git branch --set-upstream-to src/master`, { cwd });
   await cp.exec(`git checkout master`, { cwd });
   await cp.exec('git remote -v', { cwd });
-}
+};
 
-const setUser = exports.setUser = async ({ cwd, name, email }) =>  {
+const setUser = exports.setUser = async ({ cwd, name, email }) => {
   console.log(`Setting user.name = "${name}"`);
   await cp.exec(`git config user.name ${name}`, { cwd });
   console.log(`Setting user.email = "${email}"`);
   await cp.exec(`git config user.email ${email}`, { cwd });
-}
+};
 
-const extractUrlFromGitRemote = exports.extractUrlFromGitRemote = ({ str, name, nameLabel, fetch }) =>  {
+const extractUrlFromGitRemote = exports.extractUrlFromGitRemote = ({ str, name, nameLabel, fetch }) => {
   try {
     const match = str.match(`(?:^|[\\n\\r]|[\\\\n\\\\r])${name}[\\s\\t]+(.*) \\(${fetch ? 'fetch' : 'push'}\\)`);
     if (!match) { throw new Error('Match not found'); }
@@ -43,9 +43,9 @@ const extractUrlFromGitRemote = exports.extractUrlFromGitRemote = ({ str, name, 
     err.message = `Couldn't get ${nameLabel || name}: ${err.message}`;
     throw err;
   }
-}
+};
 
-const readDir = exports.readDir = async ({ cwd, src }) =>  {
+const readDir = exports.readDir = async ({ cwd, src }) => {
   let remotes, remoteOrigin, remoteSrc, branch;
   console.log(`Reading dir "${path.basename(cwd)}"...`);
   const opts = { cwd, capture: true };
@@ -70,10 +70,10 @@ const readDir = exports.readDir = async ({ cwd, src }) =>  {
 
   // console.log({ remoteOrigin, remoteSrc, branch });
   return { remoteOrigin, remoteSrc, branch };
-}
+};
 
-const fetchPr = exports.fetchPr = async ({ owner, repo, src, pr }) =>  {
+const fetchPr = exports.fetchPr = async ({ owner, repo, src, pr }) => {
   console.log(`Fetching http://github.com/${owner}/${repo}/pull/${pr}...`);
   await cp.exec(`git fetch ${src} pull/${pr}/head:pull/${pr}`);
   await cp.exec(`git checkout pull/${pr}`);
-}
+};

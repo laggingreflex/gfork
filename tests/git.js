@@ -3,25 +3,25 @@ const git = require('../src/git');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
-describe('git.clone', async() => {
-  it('should exist', async() => {
+describe('git.clone', async () => {
+  it('should exist', async () => {
     assert(git.clone);
   });
 });
 
-describe.skip('git.clone', async() => {
+describe.skip('git.clone', async () => {
   const repo = 'gfork';
   const url = 'https://github.com/laggingreflex/gfork';
-  it('should clone', async() => {
-    await git.clone({ url })
+  it('should clone', async () => {
+    await git.clone({ url });
     const files = await fs.readdir(repo);
     console.log(`files.length: ${files.length}`);
     assert(files.length > 3);
   });
-  before(async() => {
+  before(async () => {
     try { rimraf(repo); } catch (err) {}
   });
-  after(async() => {
+  after(async () => {
     rimraf(repo);
   });
 });

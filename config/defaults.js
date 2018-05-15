@@ -1,6 +1,6 @@
 const defaults = {};
 
-function add(name, config) {
+function add (name, config) {
   defaults[name] = config;
 }
 
@@ -19,6 +19,6 @@ add('depth', { type: 'number' });
 
 add('noSavedConfig', { type: 'boolean', alias: ['X'] });
 
-add('https', { type: 'boolean', alias: ['http']});
+add('https', { type: 'boolean', alias: ['http'] });
 
 module.exports = defaults;

@@ -1,20 +1,20 @@
 const spawn = require('cross-spawn-promise');
 // const {spawn} = require('child-process-es6-promise');
 
-const splitCommandStr = exports.splitCommandStr = (commandStr) =>  {
+const splitCommandStr = exports.splitCommandStr = (commandStr) => {
   const [command, ...args] = commandStr.trim().split(/[\s]+/g);
   return [command, args];
-}
+};
 
-const exec = exports.exec = async (command, opts = {}) =>  {
+const exec = exports.exec = async (command, opts = {}) => {
   if (opts.capture) {
-    opts = {...opts, capture: ['stdout', 'stderr'] };
+    opts = { ...opts, capture: ['stdout', 'stderr'] };
   } else {
     opts = { stdio: 'inherit', ...opts };
   }
   opts = { encoding: 'utf8', ...opts };
   opts = { shell: true, ...opts };
-  if (opts.env) { opts.env = {...process.env, ...opts.env }; }
+  if (opts.env) { opts.env = { ...process.env, ...opts.env }; }
   let child, promise, result, stdout, stderr;
   try {
     promise = spawn(command, [], opts);
@@ -36,17 +36,17 @@ const exec = exports.exec = async (command, opts = {}) =>  {
     err.message = err.stderr + err.message;
     throw err;
   }
-}
+};
 
-const fixStdout = exports.fixStdout = (std) =>  {
+const fixStdout = exports.fixStdout = (std) => {
   if (!std) { return ''; }
   if (typeof std !== 'string') { std = std.toString(); }
   std = std.replace(/(.*)([\r\n]+)$/, '$1');
   return std;
-}
-const fixStderr = exports.fixStderr = (std) =>  {
+};
+const fixStderr = exports.fixStderr = (std) => {
   std = fixStdout(std);
   if (!std) { return ''; }
   std = std.replace(/[\.]*$/, '. ');
   return std;
-}
+};

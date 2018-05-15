@@ -17,7 +17,7 @@ if (argv.h || argv.help) {
 }
 
 class Config {
-  constructor(args) {
+  constructor (args) {
     const config = this;
     hiddenProp(config, 'args');
     hiddenProp(config, 'password');
@@ -136,12 +136,14 @@ class Config {
     config.editConfig = args.editConfig || args.e;
   }
 
-  async saveToFile(silent) {
+  async saveToFile (silent) {
     const config = this;
     const args = config.args;
 
     for (const key in config) {
-      if (config.propertyIsEnumerable(key) && !(config[key] && config[key].length)) { delete config[key]; }
+      if (config.propertyIsEnumerable(key) && !(config[key] && config[key].length)) {
+        delete config[key];
+      }
     }
 
     try {
@@ -153,7 +155,7 @@ class Config {
     return config;
   }
 
-  async editOne(setting, message) {
+  async editOne (setting, message) {
     const config = this;
     const prev = config[setting];
     message = message || _.capitalize(_.startCase(setting)) + ':';
@@ -168,11 +170,13 @@ class Config {
     }
   }
 
-  async edit() {
+  async edit () {
     const config = this;
 
     if (config.editConfig) {
-      const passedArgs = Object.keys(config.args).filter(arg => !isEmpty(config.args[arg]) && Object.keys(config).includes(arg));
+      const passedArgs = Object.keys(config.args).filter(arg => {
+        return !isEmpty(config.args[arg]) && Object.keys(config).includes(arg);
+      });
       if (passedArgs.length) {
         for (const arg of passedArgs) {
           await config.editOne(arg); // eslint-disable-line

@@ -3,12 +3,12 @@ const api = require('./api');
 const getTokenFromGitHub = exports.getTokenFromGitHub = async ({
   username,
   password,
-  tokenNote = 'Token for gfork',
+  tokenNote = 'Token for gfork'
 }) => {
   api.authenticate({
     type: 'basic',
     username,
-    password,
+    password
   });
 
   const { token } = await api.authorization.create({
@@ -17,14 +17,14 @@ const getTokenFromGitHub = exports.getTokenFromGitHub = async ({
   });
 
   return token;
-}
+};
 
-const authenticateWithToken = exports.authenticateWithToken = async ({ token, silent = false }) =>  {
+const authenticateWithToken = exports.authenticateWithToken = async ({ token, silent = false }) => {
   silent || console.log('Authenticating...');
 
   api.authenticate({
     type: 'oauth',
-    token,
+    token
   });
 
   const [
@@ -36,4 +36,4 @@ const authenticateWithToken = exports.authenticateWithToken = async ({ token, si
   ]);
 
   return { user: login, email };
-}
+};

@@ -1,6 +1,6 @@
 const packageJson = require('../package.json');
 
-const printHelp = exports.printHelp = (exit) =>  {
+const printHelp = exports.printHelp = (exit) => {
   console.log(`
     ${packageJson.description}
 
@@ -37,9 +37,9 @@ const printHelp = exports.printHelp = (exit) =>  {
       gfork . -L        # opens http://github.com/expressjs/express/compare/<current-branch>
   `);
   exit && process.exit(1);
-}
+};
 
-const showUsage = exports.showUsage = () =>  {
+const showUsage = exports.showUsage = () => {
   console.log(`
     Usage:
       gfork <url>
@@ -49,9 +49,9 @@ const showUsage = exports.showUsage = () =>  {
       -u, --username  GitHub username
       -p, --password  GitHub password
   `);
-}
+};
 
-const showErrors = exports.showErrors = (errors) =>  {
+const showErrors = exports.showErrors = (errors) => {
   if (errors instanceof Array) {
     console.error(`
       Errors:
@@ -63,4 +63,4 @@ const showErrors = exports.showErrors = (errors) =>  {
     `);
   }
   process.exit(1);
-}
+};

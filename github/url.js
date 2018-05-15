@@ -3,7 +3,7 @@ const request = require('client-request/promise');
 const resolveRedirect = require('resolve-redirect');
 const resolveGitUrl = require('github-url-from-git');
 
-const decodeUrl = exports.decodeUrl = async (input) =>  {
+const decodeUrl = exports.decodeUrl = async (input) => {
   if (!input) {
     throw new Error('Need a URL/packageName');
   } else if (input.match(/^[a-zA-Z0-9-_.]+$/)) {
@@ -31,9 +31,9 @@ const decodeUrl = exports.decodeUrl = async (input) =>  {
     const { owner, repo } = await getOwnerRepoFromGithubUrl(input);
     return { owner, repo };
   }
-}
+};
 
-const generateUrl = exports.generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) =>  {
+const generateUrl = exports.generateUrl = async ({ https, token, domain = 'github.com', user, owner, repo, forkedRepoName } = {}) => {
   let forkedUrl, sourceUrl;
   const fRepo = forkedRepoName || repo;
   if (https) {
@@ -45,9 +45,9 @@ const generateUrl = exports.generateUrl = async ({ https, token, domain = 'githu
     forkedUrl = `git@${domain}:${user}/${fRepo}.git`;
   }
   return { forkedUrl, sourceUrl };
-}
+};
 
-const getOwnerRepoFromGithubUrl = exports.getOwnerRepoFromGithubUrl = async (url) =>  {
+const getOwnerRepoFromGithubUrl = exports.getOwnerRepoFromGithubUrl = async (url) => {
   if (url.match(/^git\+http/)) {
     url = url.substr(4);
   }
@@ -61,9 +61,9 @@ const getOwnerRepoFromGithubUrl = exports.getOwnerRepoFromGithubUrl = async (url
   }
   const [, owner, repo] = result;
   return { owner, repo, url };
-}
+};
 
-const getPackageNameFromNpmUrl = exports.getPackageNameFromNpmUrl = (url) =>  {
+const getPackageNameFromNpmUrl = exports.getPackageNameFromNpmUrl = (url) => {
   const regexp = /npmjs.com\/package\/([a-zA-Z0-9-_.]+)($|\/$)/;
   const result = regexp.exec(url);
   if (!result || result.length < 1) {
@@ -71,9 +71,9 @@ const getPackageNameFromNpmUrl = exports.getPackageNameFromNpmUrl = (url) =>  {
   }
   const [, packageName] = result;
   return packageName;
-}
+};
 
-const geGithubUrlFromNpmPackageName = exports.geGithubUrlFromNpmPackageName = async (packageName) =>  {
+const geGithubUrlFromNpmPackageName = exports.geGithubUrlFromNpmPackageName = async (packageName) => {
   let json, url;
   try {
     json = await request({
@@ -91,4 +91,4 @@ const geGithubUrlFromNpmPackageName = exports.geGithubUrlFromNpmPackageName = as
     url = resolveGitUrl(url);
   }
   return url;
-}
+};
