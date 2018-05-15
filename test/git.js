@@ -1,5 +1,5 @@
 const assert = require('assert');
-const git = require('../src/git');
+const git = require('../git');
 const fs = require('fs');
 const rimraf = require('rimraf');
 
