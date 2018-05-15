@@ -21,6 +21,36 @@ describe('github.getOwnerRepoFromGithubUrl', () => {
         repo: 'repo-with-git-in-name'
       });
     });
+    it('https://github.com/user/repo-with-.dot-in-name', async function () {
+      assert.deepEqual(await decodeUrl(this.test.title), {
+        owner: 'user',
+        repo: 'repo-with-.dot-in-name'
+      });
+    });
+    it('https://github.com/user/repo.with.dots', async function () {
+      assert.deepEqual(await decodeUrl(this.test.title), {
+        owner: 'user',
+        repo: 'repo.with.dots'
+      });
+    });
+    it('user/repo.with.dots', async function () {
+      assert.deepEqual(await decodeUrl(this.test.title), {
+        owner: 'user',
+        repo: 'repo.with.dots'
+      });
+    });
+    it('user/hyphenated-with-.dots-in-name', async function () {
+      assert.deepEqual(await decodeUrl(this.test.title), {
+        owner: 'user',
+        repo: 'hyphenated-with-.dots-in-name'
+      });
+    });
+    it.only('user/hyperspy.github.com', async function () {
+      assert.deepEqual(await decodeUrl(this.test.title), {
+        owner: 'user',
+        repo: 'hyperspy.github.com'
+      });
+    });
     it('https://github.com/user/repo/issues/new', async function () {
       assert.deepEqual(await decodeUrl(this.test.title), {
         owner: 'user',
