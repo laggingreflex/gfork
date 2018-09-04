@@ -2,7 +2,7 @@ const opn = require('opn');
 const github = require('./api');
 
 const fork = exports.fork = async ({ owner, repo, user }) => {
-  const result = await github.repos.fork({ owner, repo });
+  const { data: result } = await github.repos.fork({ owner, repo });
   const { name } = result;
   if (name !== repo) {
     console.warn(`Warning: Forked repo name different from the original: ${owner}/${repo} !==  ${user}/${name}`);

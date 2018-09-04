@@ -83,7 +83,7 @@ const geGithubUrlFromNpmPackageName = exports.geGithubUrlFromNpmPackageName = as
   } catch (error) {
     throw new Error(`Couldn't retrieve {packageName: ${packageName}} from npmjs registry. ` + error.message);
   }
-  url = _.get(json, 'repository.url');
+  url = _.get(json, 'body.repository.url');
   if (!url) {
     throw new Error(`{packageName: ${packageName}} doesn't seem to have a repository.url`);
   }

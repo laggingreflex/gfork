@@ -27,13 +27,19 @@ const authenticateWithToken = exports.authenticateWithToken = async ({ token, si
     token
   });
 
+  // const something = await Promise.all([
   const [
-    { login },
-    [{ email }]
+    { data: { login } },
+    { data: [{ email }] }
   ] = await Promise.all([
     api.users.get({}),
     api.users.getEmails({})
   ]);
+  // console.log(`something:`, something);
+  // [
+  //   { login },
+  //   [{ email }]
+  // ]
 
   return { user: login, email };
 };

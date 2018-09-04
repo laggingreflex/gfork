@@ -1,2 +1,2 @@
-const GitHubApi = require('github');
+const GitHubApi = require('@octokit/rest');
 module.exports = new GitHubApi({});
