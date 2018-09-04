@@ -10,28 +10,28 @@
   },
   "repository": "laggingreflex/gfork",
   "dependencies": {
-    "client-request": "^1.2.0",
-    "cross-spawn-promise": "^0.9.1",
-    "enquirer": "^0.4.1",
-    "fs-promise": "^1.0.0",
-    "github": "^8.1.1",
+    "client-request": "^2.3.0",
+    "cross-spawn-promise": "^0.10.1",
+    "enquirer": "^1.0.3",
+    "fs-promise": "^2.0.3",
+    "@octokit/rest": "^14.0.0",
     "github-url-from-git": "^1.5.0",
     "github-url-from-username-repo": "^1.0.2",
-    "is-empty": "^1.0.0",
-    "lodash": "^4.17.4",
-    "opn": "^4.0.2",
-    "prompt-confirm": "^0.2.1",
-    "prompt-password": "^0.1.1",
+    "is-empty": "^1.2.0",
+    "lodash": "^4.17.10",
+    "opn": "^5.3.0",
+    "prompt-confirm": "^2.0.4",
+    "prompt-password": "^1.2.0",
     "resolve-redirect": "^0.0.3",
-    "source-map-support": "^0.4.11",
-    "yargs": "^6.6.1-candidate.4"
+    "source-map-support": "^0.5.9",
+    "yargs": "^12.0.1"
   },
   "devDependencies": {
-    "chokidar": "^1.6.1",
-    "eslint": "^4.19.1",
-    "mocha": "^5.1.1",
-    "rimraf": "^2.5.4",
+    "chokidar": "^2.0.4",
+    "eslint": "^5.5.0",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.6.2",
     "semistandard": "^12.0.1",
-    "shelljs": "^0.7.4"
+    "shelljs": "^0.8.2"
   }
 }
