@@ -54,7 +54,7 @@ const getOwnerRepoFromGithubUrl = exports.getOwnerRepoFromGithubUrl = async (url
   if (url.match(/^http/)) {
     url = await resolveRedirect(url);
   }
-  const regexp = /\/\/github.com[/:](.*?)\/(.*?)(\/|$|\.git$)/;
+  const regexp = /github.com[/:](.*?)\/(.*?)(\/|$|\.git$)/;
   const result = regexp.exec(url);
   if (!result || result.length < 4) {
     throw new Error(`Couldn't extract owner/repo from url "${url}"`);
