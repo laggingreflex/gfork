@@ -4,30 +4,18 @@
   "description": "Fork, clone, init github/npm projects from command-line.",
   "main": "lib/index.js",
   "bin": "lib/bin.js",
-  "scripts": {
-    "test": "mocha"
-  },
   "repository": "laggingreflex/gfork",
   "dependencies": {
     "@octokit/rest": "^16.35.2",
     "client-request": "^2.3.0",
-    "cross-spawn-promise": "^0.10.1",
-    "enquirer": "^2.3.2",
-    "fs-promise": "^2.0.3",
+    "configucius": "^3.0.0",
+    "fs-extra": "^8.1.0",
     "github-url-from-git": "^1.5.0",
     "github-url-from-username-repo": "^1.0.2",
-    "is-empty": "^1.2.0",
     "lodash": "^4.17.15",
     "open": "^7.0.0",
-    "prompt-confirm": "^2.0.4",
-    "prompt-password": "^1.2.0",
-    "resolve-redirect": "^0.0.3",
-    "yargs": "^14.2.2"
-  },
-  "devDependencies": {
-    "chokidar": "^3.3.1",
-    "mocha": "^6.2.2",
-    "rimraf": "^3.0.0",
-    "shelljs": "^0.8.3"
+    "resolve-redirect": "0.0.3",
+    "simple-git": "^1.129.0",
+    "yargs": "^15.0.2"
   }
 }
