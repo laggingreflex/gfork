@@ -82,7 +82,9 @@ gfork pr           # opens http://github.com/expressjs/express/compare/<current-
 
 Initially gfork needs to authenticate you to GitHub (for forking).
 
-You can [get the token][get-token] and provide it using `--token=...` or it'll ask you for it, with an option to enter your credentials (username/password) and it'll get it for you.
+You can [get the token][get-token] and provide it using `--token=...` or it'll ask you for it, with an option to enter your credentials (username/password)\* and it'll get it for you.
+
+\*Note: [GitHub is deprecating password authentication][deprecated-passwords-api], you may have no other option but to [get the token][get-token] manually in the future.
 
 After the first time it'll save the token in `~/.gfork` file.
 
@@ -132,7 +134,7 @@ Doesn't work on [Lerna] packages, like [babel-register].
 |                                   | gfork | [forked] | [git-fork]    | [sgit]
 | -------------                     |:----: |:----:    |:-----:        |:----:
 | Forks                             |x      |x         |x              |
-| Auto-retrieves token              |x      |          |x              |
+| Auto-retrieves token              |-¹     |          |x              |
 | Clones                            |x      |          |x              |x
 | Opens a PR                        |x      |          |x              |
 | Fetches a PR                      |x      |          |               |
@@ -140,14 +142,15 @@ Doesn't work on [Lerna] packages, like [babel-register].
 | Works on NPM package names        |x      |          |               |
 | Works on Bitbucket URLs           |       |          |               |x
 | Works on Gitlab URLs              |       |          |               |x
-| Https .git url type               |x      |          |o¹             |
+| Https .git url type               |x      |          |o²             |
 | Shallow clone                     |x      |          |               |
 | Multiple projects simultaneously  |x      |          |               |
 | `rm -rf` before cloning           |x      |          |               |
 | Execute a command afterwards      |x      |          |               |
 | Use saved config                  |x      |          |               |
 
-<sup>o¹: *only* https urls</sup>
+<sup>-¹: for the time being, but [GitHub is deprecating the API that makes this possible][deprecated-passwords-api]</sup>
+<sup>o²: *only* https urls</sup>
 
 
 Non-similar but relevant projects:
@@ -165,6 +168,7 @@ Not related in any way, but nice little libraries for testing:
 [1]: https://help.github.com/articles/checking-out-pull-requests-locally/
 [2]: https://developer.github.com/v3/repos/forks/#create-a-fork
 [babel-register]: https://github.com/babel/babel/tree/master/packages/babel-register
+[deprecated-passwords-api]: https://developer.github.com/changes/2019-11-05-deprecated-passwords-and-authorizations-api/
 [forked]: https://github.com/eanplatter/forked
 [forked]: https://github.com/eanplatter/forked
 [get-token]: https://help.github.com/articles/creating-an-access-token-for-command-line-use/
