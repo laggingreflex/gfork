@@ -144,7 +144,6 @@ Doesn't work on [Lerna] packages, like [babel-register].
 | Works on Gitlab URLs              |       |          |               |x
 | Https .git url type               |x      |          |o²             |
 | Shallow clone                     |x      |          |               |
-| Multiple projects simultaneously  |x      |          |               |
 | `rm -rf` before cloning           |x      |          |               |
 | Execute a command afterwards      |x      |          |               |
 | Use saved config                  |x      |          |               |
