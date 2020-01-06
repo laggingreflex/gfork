@@ -8,6 +8,8 @@ Another major change.
 * Sane (opinionated) defaults
   * Does `npm link` automatically (if it's an npm project)
   * Default directory `~/gfork`
+* Automatic assumptions and checks
+  * Is only username exists, it checks for a fork automatically
 
 ## Changed
 
