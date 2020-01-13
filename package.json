@@ -8,8 +8,7 @@
   "dependencies": {
     "@octokit/rest": "^16.36.0",
     "client-request": "^2.3.0",
-    "configucius": "^4.0.1",
-    "enquire-simple": "^2.1.0",
+    "configucius": "^5.0.0",
     "fs-extra": "^8.1.0",
     "github-url-from-git": "^1.5.0",
     "github-url-from-username-repo": "^1.0.2",
