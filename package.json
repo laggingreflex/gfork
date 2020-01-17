@@ -7,6 +7,7 @@
   "repository": "laggingreflex/gfork",
   "dependencies": {
     "@octokit/rest": "^16.36.0",
+    "class-cli": "^0.1.0",
     "client-request": "^2.3.0",
     "configucius": "^5.1.0",
     "fs-extra": "^8.1.0",
